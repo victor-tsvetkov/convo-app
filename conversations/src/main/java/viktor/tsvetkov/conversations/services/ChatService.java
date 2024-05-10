@@ -11,4 +11,5 @@ public interface ChatService {
     Chat findChatById(UUID id);
     List<Chat> findChatsByIds(List<UUID> ids);
     void remove(UUID id);
+    List<Chat> findChatsByIdUser(UUID id);
 }

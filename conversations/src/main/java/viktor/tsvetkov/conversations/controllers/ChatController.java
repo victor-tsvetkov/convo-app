@@ -41,4 +41,9 @@ public class ChatController {
     public void remove(@RequestParam(value = "id") UUID id) {
         chatService.remove(id);
     }
+
+    @GetMapping("chatsByIdUsers")
+    public List<Chat> findChatsByIdUsers(@RequestParam(value = "id") UUID id) {
+        return chatService.findChatsByIdUser(id);
+    }
 }

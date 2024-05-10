@@ -19,6 +19,7 @@ import java.util.UUID;
 public class ChatServiceImpl implements ChatService {
 
     private final EntityService<Chat, ChatRepository> entityService;
+    private final ChatRepository chatRepository;
 
     @Override
     public void save(ChatDto chatDto) {
@@ -50,5 +51,10 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void remove(UUID id) {
         entityService.remove(id);
+    }
+
+    @Override
+    public List<Chat> findChatsByIdUser(UUID id) {
+        return chatRepository.findChatsByIdUser(id);
     }
 }
