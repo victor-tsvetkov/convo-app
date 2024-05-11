@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import viktor.tsvetkov.conversations.dto.UserDto;
 import viktor.tsvetkov.conversations.entities.User;
+import viktor.tsvetkov.conversations.enums.Sex;
 import viktor.tsvetkov.conversations.repositories.UserRepository;
 import viktor.tsvetkov.conversations.services.EntityService;
 import viktor.tsvetkov.conversations.services.UserService;
@@ -42,6 +43,10 @@ public final class UserServiceImpl implements UserService {
         }
     }
 
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
     @Override
     public User findById(UUID id) {
         return entityService.findEntityById(id);
@@ -59,6 +64,11 @@ public final class UserServiceImpl implements UserService {
 
     public User getRandomUser(UUID exceptId) {
         List<User> users = userRepository.findAllExceptOne(exceptId);
-        return users.get(getRandomInt(0, users.size())-1);
+        return users.get(getRandomInt(0, users.size()-1));
+    }
+
+    public User getRandomUser(Sex sex) {
+        List<User> users = userRepository.findAllBySex(sex);
+        return users.get(getRandomInt(0, users.size()-1));
     }
 }

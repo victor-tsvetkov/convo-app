@@ -22,7 +22,7 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRepository chatRepository;
 
     @Override
-    public void save(ChatDto chatDto) {
+    public Chat save(ChatDto chatDto) {
         Chat chat;
         if (chatDto.id() != null) {
             chat = entityService.findEntityById(chatDto.id());
@@ -33,6 +33,7 @@ public class ChatServiceImpl implements ChatService {
         chat.setIdUsers(chatDto.idUsers());
         try {
             entityService.save(chat);
+            return chat;
         } catch (Exception e) {
             throw new RuntimeException("Exception while saving chat: " + e.getMessage());
         }
