@@ -2,7 +2,6 @@
     import {onMounted} from "vue";
     import {useUserStore} from "@/stores/user.js";
     import {storeToRefs} from "pinia";
-    import Messages from "@/components/Messages.vue";
 
     const store = useUserStore();
     const {userData, question, pointsLabel, oppositeGender} = storeToRefs(store);
@@ -20,28 +19,23 @@
 
 <template>
     <div class="common-layout">
-
-            <el-container>
-                <el-header>
-                    <div>{{userData.name}}</div>
-                    <div>{{pointsLabel}}: {{userData.points}}</div>
-                </el-header>
-                <el-aside width="200px">Aside</el-aside>
-                <el-card>
-                    <el-main>
-                        <div>
-                            <span>{{askQuestionLabel}}</span>
-                            <div>
-                                <el-input clearable v-model="question" :placeholder="askQuestionPlaceholder"></el-input>
-                                <el-tooltip :content="toolTipText" placement="bottom-end">
-                                    <el-checkbox :label="oppositeGenderLabel" v-model="oppositeGender"></el-checkbox>
-                                </el-tooltip>
-                                <el-button @click="askQuestion(idUser)">{{askQuestionButton}}</el-button>
-                            </div>
-                        </div>
-                        <Messages :id-user="idUser"></Messages>
-                    </el-main>
-                </el-card>
-            </el-container>
+        <el-header>
+            <div>{{userData.name}}</div>
+            <div>{{pointsLabel}}: {{userData.points}}</div>
+        </el-header>
+        <el-main>
+            <div>
+                <span>{{askQuestionLabel}}</span>
+                <div>
+                    <el-input clearable v-model="question" :placeholder="askQuestionPlaceholder"></el-input>
+                    <el-tooltip :content="toolTipText" placement="bottom-end">
+                        <el-checkbox :label="oppositeGenderLabel" v-model="oppositeGender"></el-checkbox>
+                    </el-tooltip>
+                    <el-button style="float: right; margin-top: 10px"
+                               @click="askQuestion(idUser)">
+                        {{askQuestionButton}}</el-button>
+                </div>
+            </div>
+        </el-main>
     </div>
 </template>
