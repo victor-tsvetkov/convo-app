@@ -6,10 +6,10 @@ import axios from "axios";
 export const useUserStore = defineStore("user", () => {
     let userData = ref({});
     const pointsLabel = ref("Ваши баллы");
+    const idUser = '77cf2aa1-fa06-427a-82d6-7027c350e3ac';
 
-    loadUserData()
+    loadUserData(idUser)
     .then(result => {
-        console.log(result);
         userData.value = {
             name: result.data.name,
             id: result.data.id,
@@ -39,7 +39,7 @@ export const useUserStore = defineStore("user", () => {
     }
 
     return {
-        userData, loadUserData,
+        userData, loadUserData, idUser,
         question, pointsLabel, oppositeGender, askQuestion
     }
 });

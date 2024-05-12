@@ -3,7 +3,6 @@ package viktor.tsvetkov.conversations.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +13,7 @@ import viktor.tsvetkov.conversations.entities.Message;
 import viktor.tsvetkov.conversations.services.MessageService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -41,6 +41,11 @@ public class MessageController {
     @DeleteMapping
     public void remove(@RequestParam(value = "id") UUID id) {
         messageService.removeMessage(id);
+    }
+
+    @GetMapping("groupChatWithMessages")
+    public List<Map<String, Object>> groupChatWithMessagesByIdUser(@RequestParam(value = "idUser") UUID idUser) {
+        return messageService.groupChatWithMessagesByIdUser(idUser);
     }
 
 }
