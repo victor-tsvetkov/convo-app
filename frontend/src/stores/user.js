@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {ref} from "vue";
 import {loadUserData} from "@/api/loadUserData.js";
 import axios from "axios";
+import {ElMessage} from "element-plus";
 
 export const useUserStore = defineStore("user", () => {
     let userData = ref({});
@@ -34,7 +35,14 @@ export const useUserStore = defineStore("user", () => {
                 console.log(result);
                 question.value = "";
                 oppositeGender.value = false;
-            }).catch(e => console.error(e));
+            }).catch(e => {
+                console.warn(e)
+                ElMessage({
+                    showClose: true,
+                    message: e.response.data,
+                    type: 'warning',
+                })
+            });
         }
     }
 

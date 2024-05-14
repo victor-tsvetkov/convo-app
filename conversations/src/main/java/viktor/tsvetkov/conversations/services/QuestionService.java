@@ -47,4 +47,8 @@ public class QuestionService {
         askingUser.setPoints(askingUser.getPoints() - points);
         userService.save(askingUser);
     }
+
+    public void sendMessage(MessageDto messageDto) {
+        messageService.save(messageDto);
+    }
 }
