@@ -1,5 +1,6 @@
 package viktor.tsvetkov.conversations.services.impl;
 
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import static viktor.tsvetkov.conversations.utils.RandomUtils.getRandomInt;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -62,13 +64,20 @@ public final class UserServiceImpl implements UserService {
         entityService.remove(id);
     }
 
-    public User getRandomUser(UUID exceptId) {
-        List<User> users = userRepository.findAllExceptOne(exceptId);
-        return users.get(getRandomInt(0, users.size()-1));
-    }
-
-    public User getRandomUser(Sex sex) {
-        List<User> users = userRepository.findAllBySex(sex);
-        return users.get(getRandomInt(0, users.size()-1));
+    public User getRandomUser(UUID exceptId, @Nullable Sex sex) {
+        List<User> users = userRepository.findUsersNotInChat(exceptId);
+        if (!users.isEmpty()) {
+            if (sex != null) {
+                List<User> filtered = users.stream().filter(it -> it.getSex().equals(sex)).collect(toList());
+                if (!filtered.isEmpty()) {
+                    return filtered.get(getRandomInt(0, users.size()-1));
+                } else {
+                    throw new RuntimeException("Упс! Похоже, вы общались уже со всеми пользователями " +
+                            "противоположного пола! =)");
+                }
+            }
+            return users.get(getRandomInt(0, users.size()-1));
+        }
+        throw new RuntimeException("Упс! Похоже, вы общались уже со всеми пользователями! =)");
     }
 }

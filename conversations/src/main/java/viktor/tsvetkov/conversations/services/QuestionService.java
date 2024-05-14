@@ -37,9 +37,9 @@ public class QuestionService {
         }
         User randomAskedUser;
         if (askedSex != null) {
-            randomAskedUser = userService.getRandomUser(askedSex);
+            randomAskedUser = userService.getRandomUser(askingUser.getId(), askedSex);
         } else {
-            randomAskedUser = userService.getRandomUser(askingUser.getId());
+            randomAskedUser = userService.getRandomUser(askingUser.getId(), null);
         }
         ChatDto chatDto = new ChatDto(null, new ArrayList<>(Arrays.asList(askingUser.getId(), randomAskedUser.getId())));
         Chat chat = chatService.save(chatDto);
