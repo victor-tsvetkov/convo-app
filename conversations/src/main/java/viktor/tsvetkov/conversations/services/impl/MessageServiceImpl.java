@@ -1,11 +1,13 @@
 package viktor.tsvetkov.conversations.services.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import viktor.tsvetkov.conversations.dto.MessageDto;
 import viktor.tsvetkov.conversations.entities.Chat;
 import viktor.tsvetkov.conversations.entities.Message;
+import viktor.tsvetkov.conversations.entities.User;
 import viktor.tsvetkov.conversations.repositories.MessageRepository;
 import viktor.tsvetkov.conversations.services.ChatService;
 import viktor.tsvetkov.conversations.services.EntityService;
@@ -17,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -66,16 +67,30 @@ public class MessageServiceImpl implements MessageService {
         entityService.remove(id);
     }
 
+    public List<Message> findMessagesByChatsIds(List<UUID> ids) {
+        return messageRepository.findAllByChatsId(ids);
+    }
+
     @Override
+    @Transactional
     public List<Map<String, Object>> groupChatWithMessagesByIdUser(UUID idUser) {
-        List<Message> messages = messageRepository.findAllByIdUser(idUser);
-        Map<Chat, List<Message>> structure = messages.stream().collect(Collectors.groupingBy(Message::getChat));
+        List<Chat> chats = chatService.findChatsByIdUser(idUser);
+        List<UUID> idUsers = new ArrayList<>();
+        chats.forEach(chat -> idUsers.addAll(chat.getIdUsers()));
+        List<User> users = userService.findByIds(idUsers);
+
+        List<UUID> idChats = chats.stream().map(Chat::getId).collect(Collectors.toList());
+        List<Message> messages = messageRepository.findAllByChatsId(idChats);
         List<Map<String, Object>> result = new ArrayList<>();
-        Set<Chat> keys = structure.keySet();
-        for (Chat key : keys) {
-            HashMap<String, Object> hashMap = new HashMap<>(2);
-            hashMap.put("chatInfo", key);
-            hashMap.put("messages", structure.get(key));
+        for (Chat chat : chats) {
+            HashMap<String, Object> hashMap = new HashMap<>(3);
+            hashMap.put("chatInfo", chat);
+            List<Message> chatMessages = messages.stream().filter(m -> m.getChat().getId().equals(chat.getId()))
+                    .collect(Collectors.toList());
+            hashMap.put("messages", chatMessages);
+            List<User> chatUsers = users.stream().filter(user -> chat.getIdUsers().contains(user.getId()))
+                            .collect(Collectors.toList());
+            hashMap.put("users", chatUsers);
             result.add(hashMap);
         }
         return result;

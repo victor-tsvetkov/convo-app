@@ -23,8 +23,8 @@
             </div>
         </template>
         <div class="chat_board">
-            <div v-for="item in dataMessages" :key="item.chatInfo.id">
-                <el-card shadow="hover">{{item.chatInfo.id}}</el-card>
+            <div  v-for="item in dataMessages" :key="item.chatInfo.id">
+                <el-card style="height: 100%" shadow="hover">{{item.users[0].name}}</el-card>
             </div>
         </div>
     </el-card>
@@ -33,7 +33,7 @@
 <style>
     .chat_board {
         display: grid;
-        grid-template: 60px / 480px;
-        row-gap: 5px;
+        grid-template: 80px / 480px;
+        grid-auto-rows: 80px;
     }
 </style>

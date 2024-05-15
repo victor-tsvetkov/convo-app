@@ -12,4 +12,7 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
 
     @Query(nativeQuery = true, value = "select * from messages where id_user = :idUser")
     List<Message> findAllByIdUser(@Param("idUser") UUID idUser);
+
+    @Query(nativeQuery = true, value = "select * from messages where id_chat in :ids order by creation_date desc")
+    List<Message> findAllByChatsId(@Param("ids") List<UUID> ids);
 }
