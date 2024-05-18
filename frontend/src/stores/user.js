@@ -9,7 +9,7 @@ import {ElMessage} from "element-plus";
 export const useUserStore = defineStore("user", () => {
     let userData = ref({});
     const pointsLabel = ref("Ваши баллы");
-    const idUser = '03c350ba-20c9-4b4b-b997-0d9f03877a60';
+    const idUser = localStorage.getItem("idUser");
 
     loadUserData(idUser)
     .then(result => {
