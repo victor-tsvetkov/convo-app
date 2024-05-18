@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import viktor.tsvetkov.conversations.entities.User;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
@@ -15,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
                     "where users.id != :exceptId and id not in (" +
                     "select users.id from users, chats where users.id = any(chats.id_users))")
     List<User> findUsersNotInChat(@Param("exceptId") UUID exceptId);
+
+    Optional<User> findUserByUsername(String username);
 }

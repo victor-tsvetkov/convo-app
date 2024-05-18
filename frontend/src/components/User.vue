@@ -14,7 +14,10 @@
         "противоположного пола, но израсходует 30 баллов вместо 10-ти";
     const askQuestionButton = "Задать вопрос";
 
-    onMounted(() => store.loadUserData(idUser));
+    onMounted(() => {
+        store.loadUserData(idUser);
+        // store.connect();
+    });
 </script>
 
 <template>

@@ -3,11 +3,13 @@ import {ref} from "vue";
 import {loadUserData} from "@/api/loadUserData.js";
 import axios from "axios";
 import {ElMessage} from "element-plus";
+// import {Stomp} from "@stomp/stompjs";
+// import SockJS from 'sockjs-client/dist/sockjs.js';
 
 export const useUserStore = defineStore("user", () => {
     let userData = ref({});
     const pointsLabel = ref("Ваши баллы");
-    const idUser = '77cf2aa1-fa06-427a-82d6-7027c350e3ac';
+    const idUser = '03c350ba-20c9-4b4b-b997-0d9f03877a60';
 
     loadUserData(idUser)
     .then(result => {
@@ -22,6 +24,7 @@ export const useUserStore = defineStore("user", () => {
     const question = ref("");
 
     const oppositeGender = ref(false);
+    let stompClient = null;
 
     function askQuestion(idUser) {
         if (question.value.trim().length > 0) {
@@ -45,6 +48,24 @@ export const useUserStore = defineStore("user", () => {
             });
         }
     }
+
+    // const connect = () => {
+    //     const url = "http://localhost:8080/ws";
+    //     const socket = new SockJS(url);
+    //     stompClient = Stomp.over(socket);
+    //     stompClient.connect({}, () => {
+    //         stompClient.subscribe("/topic/greetings", (response) => {
+    //             console.log("РЕЗУЛЬТАТ!:");
+    //             console.log(response.body);
+    //         });
+    //     });
+    // }
+
+    // const sendMessage = () => {
+    //     stompClient.send("/app/hello", {});
+    // }
+
+
 
     return {
         userData, loadUserData, idUser,
