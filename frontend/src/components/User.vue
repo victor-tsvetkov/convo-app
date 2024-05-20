@@ -1,44 +1,54 @@
 <script setup>
-    import {onMounted} from "vue";
+    import {onMounted, shallowRef} from "vue";
     import {useUserStore} from "@/stores/user.js";
-    import {storeToRefs} from "pinia";
+    import {ChatDotRound, Document} from "@element-plus/icons-vue";
+    import UserPage from "@/components/UserPage.vue";
+    import Messages from "@/components/Messages.vue";
 
-    const store = useUserStore();
-    const {userData, question, pointsLabel, oppositeGender} = storeToRefs(store);
-    const {askQuestion, idUser} = store;
+    const userStore = useUserStore();
+    const idUser = userStore.idUser;
 
-    const askQuestionLabel = "Задайте вопрос случайному человеку";
-    const askQuestionPlaceholder = "Задайте вопрос";
-    const oppositeGenderLabel = "Противоположный пол";
-    const toolTipText = "При активной галочке вопрос со 100% вероятностью отправится представителю " +
-        "противоположного пола, но израсходует 30 баллов вместо 10-ти";
-    const askQuestionButton = "Задать вопрос";
+    const tabs = [
+        {
+            id: 1,
+            name: 'Моя страница',
+            component: UserPage,
+            icon: Document
+        },
+        {
+            id: 2,
+            name: 'Мои чаты',
+            component: Messages,
+            icon: ChatDotRound
+        }
+    ];
+
+    let currentComponent = shallowRef(tabs[0]);
 
     onMounted(() => {
-        store.loadUserData(idUser);
+        userStore.loadUserData(idUser);
         // store.connect();
     });
 </script>
 
 <template>
-    <div class="common-layout">
-        <el-header>
-            <div>{{userData.name}}</div>
-            <div>{{pointsLabel}}: {{userData.points}}</div>
-        </el-header>
-        <el-main>
-            <div>
-                <span>{{askQuestionLabel}}</span>
-                <div>
-                    <el-input clearable v-model="question" :placeholder="askQuestionPlaceholder"></el-input>
-                    <el-tooltip :content="toolTipText" placement="bottom-end">
-                        <el-checkbox :label="oppositeGenderLabel" v-model="oppositeGender"></el-checkbox>
-                    </el-tooltip>
-                    <el-button style="float: right; margin-top: 10px"
-                               @click="askQuestion(idUser)">
-                        {{askQuestionButton}}</el-button>
-                </div>
-            </div>
-        </el-main>
-    </div>
+
+    <el-container style="height:800px">
+        <el-aside width="400px">
+            <el-row class="tac">
+                <el-col :span="15">
+                    <el-menu
+                        class="el-menu-vertical-demo">
+                        <el-menu-item @click="currentComponent = tab" :key="tab.id" v-for="tab in tabs">
+                            <el-icon :is="tab.icon"></el-icon>
+                            <span>{{tab.name}}</span>
+                        </el-menu-item>
+                    </el-menu>
+                </el-col>
+            </el-row>
+        </el-aside>
+        <el-card style="width: 800px">
+            <component :idUser="idUser" :is="currentComponent.component"/>
+        </el-card>
+    </el-container>
 </template>
