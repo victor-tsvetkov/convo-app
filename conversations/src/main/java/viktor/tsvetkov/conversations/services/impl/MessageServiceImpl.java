@@ -1,10 +1,13 @@
 package viktor.tsvetkov.conversations.services.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import viktor.tsvetkov.conversations.dto.MessageDto;
+import viktor.tsvetkov.conversations.entities.Chat;
 import viktor.tsvetkov.conversations.entities.Message;
+import viktor.tsvetkov.conversations.entities.User;
 import viktor.tsvetkov.conversations.repositories.MessageRepository;
 import viktor.tsvetkov.conversations.services.ChatService;
 import viktor.tsvetkov.conversations.services.EntityService;
@@ -12,8 +15,12 @@ import viktor.tsvetkov.conversations.services.MessageService;
 import viktor.tsvetkov.conversations.services.UserService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +30,7 @@ public class MessageServiceImpl implements MessageService {
     private final EntityService<Message, MessageRepository> entityService;
     private final ChatService chatService;
     private final UserService userService;
+    private final MessageRepository messageRepository;
 
     @Override
     public void save(MessageDto messageDto) {
@@ -57,5 +65,33 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void removeMessage(UUID id) {
         entityService.remove(id);
+    }
+
+    public List<Message> findMessagesByChatsIds(List<UUID> ids) {
+        return messageRepository.findAllByChatsId(ids);
+    }
+
+    public List<Message> findMessagesByIdChat(UUID id) {
+        return messageRepository.findMessagesByChatId(id);
+    }
+
+    @Override
+    @Transactional
+    public List<Map<String, Object>> groupChatWithMessagesByIdUser(UUID idUser) {
+        List<Chat> chats = chatService.findChatsByIdUser(idUser);
+        List<UUID> idUsers = new ArrayList<>();
+        chats.forEach(chat -> idUsers.addAll(chat.getIdUsers()));
+        List<User> users = userService.findByIds(idUsers);
+        List<Map<String, Object>> result = new ArrayList<>(chats.size());
+        for (Chat chat : chats) {
+            HashMap<String, Object> hashMap = new HashMap<>(2);
+            hashMap.put("chatInfo", chat);
+            List<User> chatUsers = users.stream().filter(user -> chat.getIdUsers().contains(user.getId()))
+                            .collect(Collectors.toList());
+            hashMap.put("interlocutor", chatUsers.stream().filter(u -> !u.getId().equals(idUser)).findFirst()
+                    .orElseThrow());
+            result.add(hashMap);
+        }
+        return result;
     }
 }
