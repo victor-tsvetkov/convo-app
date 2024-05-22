@@ -1,6 +1,7 @@
 <script setup>
     import {useUserStore} from "@/stores/user.js";
     import {storeToRefs} from "pinia";
+    import {onMounted} from "vue";
 
     const userStore = useUserStore();
     const {userData, question, pointsLabel, oppositeGender} = storeToRefs(userStore);
@@ -13,10 +14,15 @@
         "противоположного пола, но израсходует 30 баллов вместо 10-ти";
     const askQuestionButton = "Задать вопрос";
 
+    onMounted(() => {
+        userStore.loadUserData(idUser);
+        // store.connect();
+    });
+
 </script>
 
 <template>
-    <div class="common-layout">
+    <el-card style="width: 800px;" class="common-layout">
         <el-header>
             <div>{{userData.name}}</div>
             <div>{{pointsLabel}}: {{userData.points}}</div>
@@ -35,7 +41,7 @@
                 </div>
             </div>
         </el-main>
-    </div>
+    </el-card>
 </template>
 
 <style scoped>

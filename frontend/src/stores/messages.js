@@ -3,7 +3,8 @@ import axios from "axios";
 import {ref} from "vue";
 
 export const useMessagesStore = defineStore("messages", () => {
-    let dataMessages = ref(null);
+    let dataChats = ref(null);
+    let chatMessages = ref([]);
 
     function loadDataMessages(idUser) {
         console.log(idUser);
@@ -13,11 +14,31 @@ export const useMessagesStore = defineStore("messages", () => {
             }
         }).then(result => {
             console.log(result);
-            dataMessages.value = result.data;
+            dataChats.value = result.data;
         }).catch(e => console.error(e));
     }
 
+    const loadMessagesByChatId = async (idChat) => {
+        axios.get("message/findMessagesByChatId", {
+            params: {
+                id: idChat
+            }
+        })
+        .then(result => {
+            console.log(result);
+            chatMessages.value = [...result.data];
+        }).catch(e => console.error(e));
+    }
+
+    const sendMessage = (messageDto) => {
+        const idChat = messageDto.idChat;
+        axios.put('message', messageDto)
+        .then(result => {
+            loadMessagesByChatId(idChat);
+        });
+    }
+
     return {
-        dataMessages, loadDataMessages
+        dataChats, loadDataMessages, sendMessage, loadMessagesByChatId, chatMessages
     }
 });

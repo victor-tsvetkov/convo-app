@@ -71,6 +71,10 @@ public class MessageServiceImpl implements MessageService {
         return messageRepository.findAllByChatsId(ids);
     }
 
+    public List<Message> findMessagesByIdChat(UUID id) {
+        return messageRepository.findMessagesByChatId(id);
+    }
+
     @Override
     @Transactional
     public List<Map<String, Object>> groupChatWithMessagesByIdUser(UUID idUser) {
@@ -78,19 +82,14 @@ public class MessageServiceImpl implements MessageService {
         List<UUID> idUsers = new ArrayList<>();
         chats.forEach(chat -> idUsers.addAll(chat.getIdUsers()));
         List<User> users = userService.findByIds(idUsers);
-
-        List<UUID> idChats = chats.stream().map(Chat::getId).collect(Collectors.toList());
-        List<Message> messages = messageRepository.findAllByChatsId(idChats);
-        List<Map<String, Object>> result = new ArrayList<>();
+        List<Map<String, Object>> result = new ArrayList<>(chats.size());
         for (Chat chat : chats) {
-            HashMap<String, Object> hashMap = new HashMap<>(3);
+            HashMap<String, Object> hashMap = new HashMap<>(2);
             hashMap.put("chatInfo", chat);
-            List<Message> chatMessages = messages.stream().filter(m -> m.getChat().getId().equals(chat.getId()))
-                    .collect(Collectors.toList());
-            hashMap.put("messages", chatMessages);
             List<User> chatUsers = users.stream().filter(user -> chat.getIdUsers().contains(user.getId()))
                             .collect(Collectors.toList());
-            hashMap.put("users", chatUsers);
+            hashMap.put("interlocutor", chatUsers.stream().filter(u -> !u.getId().equals(idUser)).findFirst()
+                    .orElseThrow());
             result.add(hashMap);
         }
         return result;
