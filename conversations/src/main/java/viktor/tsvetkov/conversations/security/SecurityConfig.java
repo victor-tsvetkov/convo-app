@@ -10,12 +10,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.encrypt.Encryptors;
-import org.springframework.security.crypto.encrypt.TextEncryptor;
-import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import viktor.tsvetkov.conversations.services.impl.UserServiceImpl;
-
 
 @Configuration
 @RequiredArgsConstructor
@@ -45,11 +41,5 @@ public class SecurityConfig {
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
-    }
-
-    @Bean
-    public TextEncryptor textEncryptor() {
-        String key = KeyGenerators.string().generateKey();
-        return Encryptors.text("password", key);
     }
 }

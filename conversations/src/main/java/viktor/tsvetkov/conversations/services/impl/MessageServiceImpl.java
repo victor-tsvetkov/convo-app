@@ -72,7 +72,9 @@ public class MessageServiceImpl implements MessageService {
     }
 
     public List<Message> findMessagesByIdChat(UUID id) {
-        return messageRepository.findMessagesByChatId(id);
+        List<Message> list = messageRepository.findMessagesByChatId(id);
+//        list.forEach(message -> message.setText(textEncryptor.decrypt(message.getText())));
+        return list;
     }
 
     @Override

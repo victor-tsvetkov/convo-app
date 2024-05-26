@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import viktor.tsvetkov.conversations.dto.UserDto;
+import viktor.tsvetkov.conversations.entities.Chat;
 import viktor.tsvetkov.conversations.entities.User;
 import viktor.tsvetkov.conversations.enums.Sex;
 import viktor.tsvetkov.conversations.repositories.UserRepository;
@@ -14,6 +15,7 @@ import viktor.tsvetkov.conversations.services.UserService;
 import static viktor.tsvetkov.conversations.utils.RandomUtils.getRandomInt;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,6 +28,7 @@ public final class UserServiceImpl implements UserService {
 
     private final EntityService<User, UserRepository> entityService;
     private final UserRepository userRepository;
+    private final ChatServiceImpl chatService;
 
     @Override
     public User save(UserDto userDto) {
@@ -69,7 +72,15 @@ public final class UserServiceImpl implements UserService {
     }
 
     public User getRandomUser(UUID exceptId, @Nullable Sex sex) {
-        List<User> users = userRepository.findUsersNotInChat(exceptId);
+        List<Chat> havingChats = chatService.findChatsByIdUser(exceptId);
+        List<UUID> exceptingIdUsers = new ArrayList<>(havingChats.size());
+        for (Chat chat : havingChats) {
+            UUID id = chat.getIdUsers().stream().filter(item -> !exceptId.equals(item))
+                    .collect(toList()).get(0);
+            exceptingIdUsers.add(id);
+        }
+        List<User> users = userRepository.findUsersByNotInListId(exceptingIdUsers, exceptId);
+
         if (!users.isEmpty()) {
             if (sex != null) {
                 List<User> filtered = users.stream().filter(it -> it.getSex().equals(sex)).collect(toList());

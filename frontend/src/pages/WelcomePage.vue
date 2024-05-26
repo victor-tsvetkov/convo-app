@@ -5,7 +5,7 @@
     import {useRouter} from "vue-router";
 
     const authenticationStore = useAuthenticationStore();
-    let formData = ref(authenticationStore.signInData);
+    let formData = ref(authenticationStore.registerData);
     let registerMode = true;
 
     const formComponentToggle = () => {
