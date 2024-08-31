@@ -2,6 +2,7 @@
     import {useUserStore} from "@/stores/user.js";
     import {storeToRefs} from "pinia";
     import {onMounted} from "vue";
+    import axios from "axios";
 
     const userStore = useUserStore();
     const {userData, question, pointsLabel, oppositeGender} = storeToRefs(userStore);

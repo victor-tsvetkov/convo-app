@@ -12,7 +12,7 @@ import viktor.tsvetkov.conversations.security.dto.AuthenticationRequest;
 import viktor.tsvetkov.conversations.security.dto.AuthenticationResponse;
 import viktor.tsvetkov.conversations.security.dto.RegisterRequest;
 import viktor.tsvetkov.conversations.security.jwt.JwtService;
-import viktor.tsvetkov.conversations.services.impl.UserServiceImpl;
+import viktor.tsvetkov.conversations.services.impl.UserService;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     public AuthenticationResponse register(RegisterRequest request) {
         UserDto userDto = new UserDto(null, request.name(), request.sex(),

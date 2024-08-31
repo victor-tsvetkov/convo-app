@@ -9,18 +9,19 @@ import viktor.tsvetkov.conversations.dto.MessageDto;
 import viktor.tsvetkov.conversations.dto.QuestionDto;
 import viktor.tsvetkov.conversations.entities.Chat;
 import viktor.tsvetkov.conversations.entities.User;
+import viktor.tsvetkov.conversations.entities.UserChatItem;
 import viktor.tsvetkov.conversations.enums.Sex;
-import viktor.tsvetkov.conversations.services.impl.UserServiceImpl;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import viktor.tsvetkov.conversations.services.impl.ChatService;
+import viktor.tsvetkov.conversations.services.impl.MessageService;
+import viktor.tsvetkov.conversations.services.impl.UserService;
 
 @Service
 @RequiredArgsConstructor
 public class QuestionService {
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final ChatService chatService;
     private final MessageService messageService;
+    private final UserChatItemService userChatItemService;
 
     @Transactional
     public void askQuestion(@Nonnull QuestionDto questionDto) {
@@ -37,15 +38,23 @@ public class QuestionService {
         }
         User randomAskedUser;
         if (askedSex != null) {
-            randomAskedUser = userService.getRandomUser(askingUser.getId(), askedSex);
+            randomAskedUser = userService.getRandomUserToChat(askingUser, askedSex);
         } else {
-            randomAskedUser = userService.getRandomUser(askingUser.getId(), null);
+            randomAskedUser = userService.getRandomUserToChat(askingUser, null);
         }
-        ChatDto chatDto = new ChatDto(null, new ArrayList<>(Arrays.asList(askingUser.getId(), randomAskedUser.getId())));
+        ChatDto chatDto = new ChatDto(null);
         Chat chat = chatService.save(chatDto);
         messageService.save(new MessageDto(null, chat.getId(), askingUser.getId(), questionDto.question()));
         askingUser.setPoints(askingUser.getPoints() - points);
         userService.save(askingUser);
+        UserChatItem askingUserChatItem = new UserChatItem();
+        askingUserChatItem.setChat(chat);
+        askingUserChatItem.setUser(askingUser);
+        UserChatItem randomUserChatItem = new UserChatItem();
+        randomUserChatItem.setChat(chat);
+        randomUserChatItem.setUser(randomAskedUser);
+        userChatItemService.save(askingUserChatItem);
+        userChatItemService.save(randomUserChatItem);
     }
 
     public void sendMessage(MessageDto messageDto) {

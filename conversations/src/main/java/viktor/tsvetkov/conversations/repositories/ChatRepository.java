@@ -10,6 +10,9 @@ import java.util.UUID;
 
 public interface ChatRepository extends JpaRepository<Chat, UUID> {
 
-    @Query(nativeQuery = true, value = "select * from chats where :id = ANY(id_users)")
+    @Query(nativeQuery = true,
+            value = "select c.* from chats c " +
+                    "join users_chats uc on c.id = uc.chat_id " +
+                    "join users u on uc.user_id = u.id where u.id = :id")
     List<Chat> findChatsByIdUser(@Param("id") UUID id);
 }

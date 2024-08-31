@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import viktor.tsvetkov.conversations.dto.UserDto;
 import viktor.tsvetkov.conversations.entities.User;
-import viktor.tsvetkov.conversations.services.UserService;
+import viktor.tsvetkov.conversations.services.impl.UserService;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,11 +28,6 @@ public class UserController {
     @GetMapping("userById")
     public User findUserById(@RequestParam(value = "id") UUID id) {
         return userService.findById(id);
-    }
-
-    @GetMapping("usersByIds")
-    public List<User> findUsersByIds(@RequestParam(value = "id") List<UUID> ids) {
-        return userService.findByIds(ids);
     }
 
     @DeleteMapping

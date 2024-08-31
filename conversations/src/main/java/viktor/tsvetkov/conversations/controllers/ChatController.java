@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import viktor.tsvetkov.conversations.dto.ChatDto;
 import viktor.tsvetkov.conversations.entities.Chat;
-import viktor.tsvetkov.conversations.services.ChatService;
+import viktor.tsvetkov.conversations.services.impl.ChatService;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,11 +30,6 @@ public class ChatController {
     @GetMapping("chatById")
     public Chat findChatById(@RequestParam(value = "id") UUID id) {
         return chatService.findChatById(id);
-    }
-
-    @GetMapping("chatsByIds")
-    public List<Chat> findChatsByIds(@RequestParam(value = "ids") List<UUID> ids) {
-        return chatService.findChatsByIds(ids);
     }
 
     @DeleteMapping

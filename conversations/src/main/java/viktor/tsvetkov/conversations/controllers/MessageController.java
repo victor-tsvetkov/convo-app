@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import viktor.tsvetkov.conversations.dto.MessageDto;
 import viktor.tsvetkov.conversations.entities.Message;
-import viktor.tsvetkov.conversations.services.impl.MessageServiceImpl;
+import viktor.tsvetkov.conversations.services.impl.MessageService;
 
 import java.util.List;
 import java.util.Map;
@@ -21,16 +21,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MessageController {
 
-    private final MessageServiceImpl messageService;
+    private final MessageService messageService;
 
     @GetMapping("messageById")
     public Message findMessageById(@RequestParam(value = "id") UUID id) {
         return messageService.findMessageById(id);
-    }
-
-    @GetMapping("messagesByIds")
-    public List<Message> findMessagesByIds(@RequestParam(value = "ids") List<UUID> ids) {
-        return messageService.findMessagesByIds(ids);
     }
 
     @PutMapping

@@ -11,13 +11,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import viktor.tsvetkov.conversations.services.impl.UserServiceImpl;
+import viktor.tsvetkov.conversations.services.impl.UserService;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @Bean
     public UserDetailsService userDetailsService() {
