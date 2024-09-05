@@ -42,7 +42,7 @@ export const useUserStore = defineStore("user", () => {
                 console.warn(e)
                 ElMessage({
                     showClose: true,
-                    message: e.response.data,
+                    message: e.response.data.message,
                     type: 'warning',
                 })
             });

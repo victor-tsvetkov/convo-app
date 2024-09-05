@@ -1,7 +1,9 @@
 package viktor.tsvetkov.conversations.services.impl;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import viktor.tsvetkov.conversations.dto.ChatWithInterlocutor;
@@ -28,34 +30,34 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
     private final QueryService queryService;
 
     public User save(UserDto userDto) {
-        User user = new User();
-        if (userDto.id() != null) {
-            user.setId(userDto.id());
-        } else {
-            user.setCreationDate(LocalDateTime.now());
-            user.setPoints(30);
-        }
-        user.setName(userDto.name());
-        user.setSex(userDto.sex());
-        user.setUsername(userDto.username());
-        user.setPassword(userDto.password());
-        userRepository.save(user);
-        return user;
+        User user = User.builder()
+                .id(userDto.id())
+                .points(50)
+                .name(userDto.name())
+                .sex(userDto.sex())
+                .creationDate(LocalDateTime.now())
+                .username(userDto.username())
+                .password(userDto.password())
+                .build();
+        return userRepository.save(user);
     }
 
     public void save(User user) {
         userRepository.save(user);
     }
 
-    @Cacheable(cacheNames = "cache", cacheManager = "caffeineCacheManager")
+    @Cacheable("users")
     public User findById(UUID id) {
-        return userRepository.findById(id).orElseThrow();
+        log.info("Getting user with id {}", id);
+        return userRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("User with id " + id + " wasn't found"));
     }
 
     public void remove(UUID id) {

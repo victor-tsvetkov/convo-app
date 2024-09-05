@@ -34,7 +34,6 @@ public class ChatService {
         chatRepository.deleteById(id);
     }
 
-    @Cacheable(cacheNames = "cache", cacheManager = "caffeineCacheManager")
     public List<Chat> findChatsByIdUser(UUID id) {
         return chatRepository.findChatsByIdUser(id);
     }
