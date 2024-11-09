@@ -6,11 +6,12 @@ export const useMessagesStore = defineStore("messages", () => {
     let dataChats = ref(null);
     let chatMessages = ref([]);
 
-    function loadDataMessages(idUser) {
+    function loadDataMessages(idUser, searchParam) {
         console.log(idUser);
-        axios.get("message/groupChatWithMessages", {
+        axios.get("chatItem/groupChatWithMessages", {
             params: {
-                idUser
+                idUser,
+                searchParam
             }
         }).then(result => {
             console.log(result);

@@ -3,15 +3,14 @@ package viktor.tsvetkov.conversations.services.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import viktor.tsvetkov.conversations.dto.ChatWithInterlocutor;
 import viktor.tsvetkov.conversations.dto.MessageDto;
+import viktor.tsvetkov.conversations.dto.MessagesForChatDto;
 import viktor.tsvetkov.conversations.entities.Message;
 import viktor.tsvetkov.conversations.repositories.MessageRepository;
+import viktor.tsvetkov.conversations.services.QueryService;
+import static viktor.tsvetkov.conversations.utils.query.Queries.GET_MESSAGES_BY_ID_CHAT;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -21,9 +20,8 @@ import java.util.UUID;
 @Slf4j
 public class MessageService {
 
-    private final ChatService chatService;
-    private final UserService userService;
     private final MessageRepository messageRepository;
+    private final QueryService queryService;
 
     public void save(MessageDto messageDto) {
         Message message = new Message();
@@ -32,8 +30,8 @@ public class MessageService {
         } else {
             message.setCreationDate(LocalDateTime.now());
         }
-        message.setChat(chatService.findChatById(messageDto.idChat()));
-        message.setUser(userService.findById(messageDto.idUser()));
+        message.setIdChat(messageDto.idChat());
+        message.setIdUser(messageDto.idUser());
         message.setText(messageDto.text());
         messageRepository.save(message);
     }
@@ -46,20 +44,7 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
-    public List<Message> findMessagesByIdChat(UUID id) {
-        return messageRepository.findMessagesByChatId(id);
-    }
-
-    @Transactional
-    public List<Map<String, Object>> groupChatWithMessagesByIdUser(UUID idUser) {
-        List<ChatWithInterlocutor> chats = userService.getChatsOfCurrentUserIdWithInterlocutor(idUser);
-        List<Map<String, Object>> result = new ArrayList<>(chats.size());
-        for (ChatWithInterlocutor chat : chats) {
-            HashMap<String, Object> hashMap = new HashMap<>(2);
-            hashMap.put("chatInfo", chat.getChat());
-            hashMap.put("interlocutor", chat.getInterlocutor());
-            result.add(hashMap);
-        }
-        return result;
+    public List<MessagesForChatDto> findMessagesByIdChat(UUID id) {
+        return queryService.executeSql(GET_MESSAGES_BY_ID_CHAT, MessagesForChatDto.class, Map.of("chatId", id));
     }
 }

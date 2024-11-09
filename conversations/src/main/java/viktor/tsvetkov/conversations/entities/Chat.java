@@ -20,7 +20,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Chat implements EntityItem {
+public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")

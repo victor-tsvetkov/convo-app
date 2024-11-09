@@ -5,9 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +19,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message implements EntityItem {
+public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -33,13 +32,11 @@ public class Message implements EntityItem {
     @Column(name = "update_date")
     private LocalDateTime updateDate;
 
-    @ManyToOne
-    @JoinColumn(name = "id_chat")
-    private Chat chat;
+    @Column(name = "id_chat")
+    private UUID idChat;
 
-    @ManyToOne
-    @JoinColumn(name = "id_user")
-    private User user;
+    @Column(name = "id_user")
+    private UUID idUser;
 
     @Column(name = "text")
     private String text;

@@ -12,6 +12,7 @@ import viktor.tsvetkov.conversations.dto.UserDto;
 import viktor.tsvetkov.conversations.entities.User;
 import viktor.tsvetkov.conversations.enums.Sex;
 import viktor.tsvetkov.conversations.mappers.UserTestMapper;
+import viktor.tsvetkov.conversations.repositories.UserChatItemRepository;
 import viktor.tsvetkov.conversations.security.authentication.AuthenticationService;
 import viktor.tsvetkov.conversations.security.dto.RegisterRequest;
 import viktor.tsvetkov.conversations.services.impl.UserService;
@@ -34,6 +35,13 @@ class ConversationsApplicationTests {
 	private UserService userService;
 	@Autowired
 	private AuthenticationService authenticationService;
+	@Autowired
+	private UserChatItemRepository userChatItemRepository;
+
+	@Test
+	public void testGetChatWithInterlocutor() {
+
+	}
 
 	@Test
 	public void testCreateUser() {

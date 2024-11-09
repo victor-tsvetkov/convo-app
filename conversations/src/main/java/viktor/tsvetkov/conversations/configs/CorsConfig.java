@@ -26,8 +26,7 @@ public class CorsConfig {
                         .requestMatchers("/question/**").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/test/**").permitAll()
-                        .requestMatchers("generate/**").permitAll()
+                        .requestMatchers("/chatItem/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
         return http.build();

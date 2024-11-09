@@ -31,12 +31,14 @@
 <template>
     <el-card>
         <div class="chat">
-            <ul class="messages_list">
+            <div class="messages_list">
                 <li :key="message.id" v-for="message in messages"
-                    :style="{width: '200px', marginTop: '10px', alignSelf: idUser === message.user.id ? 'flex-end' : 'flex-start'}">
-                    <el-card>{{message.text}}</el-card>
+                    :style="{width: '200px', marginTop: '10px', alignSelf: idUser === message.idUser ? 'flex-end' : 'flex-start'}">
+                    <el-card>
+                        {{message.text}}
+                    </el-card>
                 </li>
-            </ul>
+            </div>
             <el-input placeholder="Введите сообщение" v-model="messageInput" type="textarea"></el-input>
             <el-button @click="sendMessage">Отправить</el-button>
         </div>
@@ -48,10 +50,11 @@
         display: grid;
         grid-template: 630px 100px / 800px;
     }
+
     .messages_list {
-        height: 630px;
+        height: 530px;
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
         flex-direction: column;
         overflow-y: scroll;
         list-style-type: none;

@@ -6,14 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import viktor.tsvetkov.conversations.dto.ChatWithInterlocutor;
 import viktor.tsvetkov.conversations.dto.UserDto;
-import viktor.tsvetkov.conversations.entities.Chat;
 import viktor.tsvetkov.conversations.entities.User;
 import viktor.tsvetkov.conversations.enums.Sex;
 import viktor.tsvetkov.conversations.exceptions.NoUsersToTalkException;
-import viktor.tsvetkov.conversations.mappers.ChatMapper;
-import viktor.tsvetkov.conversations.mappers.UserMapper;
 import viktor.tsvetkov.conversations.repositories.UserRepository;
 import viktor.tsvetkov.conversations.services.QueryService;
 import viktor.tsvetkov.conversations.utils.query.Queries;
@@ -21,7 +17,6 @@ import viktor.tsvetkov.conversations.utils.query.Queries;
 import static viktor.tsvetkov.conversations.utils.RandomUtils.getRandomInt;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,28 +61,6 @@ public class UserService {
 
     public User getRandomUser(List<User> users) {
         return users.get(getRandomInt(0, users.size())-1);
-    }
-
-    public List<ChatWithInterlocutor> getChatsOfCurrentUserIdWithInterlocutor(UUID currentUserId) {
-        Map<String, Object> params = new HashMap<>(1);
-        params.put("currentUserId", currentUserId);
-        List<Object> res = queryService
-                .executeSql(Queries.GET_CHATS_OF_CURRENT_USER_WITH_INTERLOCUTOR, params);
-        List<ChatWithInterlocutor> result = new ArrayList<>(res.size());
-        for (Object object : res) {
-            Object[] data = (Object[]) object;
-            ChatWithInterlocutor chatWithInterlocutor = new ChatWithInterlocutor();
-            Object[] chatData = new Object[2];
-            Object[] userData = new Object[6];
-            System.arraycopy(data, 0, chatData, 0, 2);
-            System.arraycopy(data, 2, userData, 0, 6);
-            User interlocutor = UserMapper.mapUser(userData);
-            Chat chat = ChatMapper.mapChat(chatData);
-            chatWithInterlocutor.setInterlocutor(interlocutor);
-            chatWithInterlocutor.setChat(chat);
-            result.add(chatWithInterlocutor);
-        }
-        return result;
     }
 
     public List<User> usersCurrentUserDoesNotHaveChatWith(User currentUser, @Nullable Sex sex) {

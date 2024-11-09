@@ -1,7 +1,7 @@
 create schema if not exists public;
-create table public.users
+create table if not exists public.users
 (
-    id            uuid      default random_uuid() not null
+    id            uuid      default gen_random_uuid() not null
         primary key,
     name          varchar(30),
     points        bigint,
@@ -10,3 +10,5 @@ create table public.users
     username      varchar(10),
     password      text
 );
+
+

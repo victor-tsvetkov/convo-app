@@ -43,11 +43,11 @@ public class QuestionService {
         askingUser.setPoints(askingUser.getPoints() - points);
         userService.save(askingUser);
         UserChatItem askingUserChatItem = new UserChatItem();
-        askingUserChatItem.setChat(chat);
-        askingUserChatItem.setUser(askingUser);
+        askingUserChatItem.setChatId(chat.getId());
+        askingUserChatItem.setUserId(askingUser.getId());
         UserChatItem randomUserChatItem = new UserChatItem();
-        randomUserChatItem.setChat(chat);
-        randomUserChatItem.setUser(randomAskedUser);
+        randomUserChatItem.setChatId(chat.getId());
+        randomUserChatItem.setUserId(randomAskedUser.getId());
         userChatItemService.save(askingUserChatItem);
         userChatItemService.save(randomUserChatItem);
     }

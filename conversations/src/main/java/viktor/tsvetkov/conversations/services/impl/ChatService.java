@@ -1,7 +1,6 @@
 package viktor.tsvetkov.conversations.services.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import viktor.tsvetkov.conversations.dto.ChatDto;
 import viktor.tsvetkov.conversations.entities.Chat;
