@@ -31,36 +31,32 @@
 
 <template>
     <div>
-        <el-card style="max-width: 550px">
-            <template #header>
-                <div class="card-header">
-                    <span>Чаты</span>
-                </div>
-            </template>
+        <v-card title="Чаты">
             <div class="card-header">
-                <el-input @input="loadDataMessages(idUser, searchMessageValue)"
+                <v-text-field @input="loadDataMessages(idUser, searchMessageValue)"
                           v-model="searchMessageValue" clearable
-                          placeholder="Поиск"></el-input>
+                          placeholder="Поиск"></v-text-field>
             </div>
             <div class="chat_board">
                 <div  v-for="(item, index) in dataChats" :key="index">
-                    <el-card @click="openChat(item.chatId)" style="height: 100%" shadow="hover">
+                    <v-card @click="openChat(item.chatId)" variant="outlined" style="height: 100%;
+                    padding-left: 10px; padding-right: 10px" shadow="hover">
                         <div class="chat_appearance">
                             <span>{{item.interlocutorName}}</span>
                             <time class="time">{{item.messageDate}}</time>
                         </div>
                         <div class="message">{{item.messageText}}</div>
-                    </el-card>
+                    </v-card>
                 </div>
             </div>
-        </el-card>
+        </v-card>
     </div>
 </template>
 
 <style>
     .chat_board {
         display: grid;
-        grid-template: 80px / 480px;
+        grid-template: 80px / 100%;
         grid-auto-rows: 80px;
         cursor: pointer;
         margin-top: 10px;

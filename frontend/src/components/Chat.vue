@@ -1,6 +1,6 @@
 <script setup>
-    import {computed, onMounted, ref} from "vue";
-    import {useMessagesStore} from "@/stores/messages.js";
+import {computed, onUnmounted, ref} from "vue";
+import {useMessagesStore} from "@/stores/messages.js";
 
     const props = defineProps({
         idChat: String,
@@ -8,6 +8,7 @@
     });
 
     const messagesStore = useMessagesStore();
+    const {clearData, loadMessagesByChatId} = messagesStore;
 
     const {idUser, idChat} = props;
 
@@ -24,38 +25,53 @@
         }
     }
 
-    onMounted(() => messagesStore.loadMessagesByChatId(idChat));
+    const load = ({done}) => {
+        loadMessagesByChatId(idChat, {done});
+    }
+
+    // onMounted(() => loadMessagesByChatId(idChat))
+    onUnmounted(clearData);
 
 </script>
 
 <template>
-    <el-card>
-        <div class="chat">
-            <div class="messages_list">
-                <li :key="message.id" v-for="message in messages"
-                    :style="{width: '200px', marginTop: '10px', alignSelf: idUser === message.idUser ? 'flex-end' : 'flex-start'}">
-                    <el-card>
-                        {{message.text}}
-                    </el-card>
-                </li>
+    <div class="chat">
+        <v-infinite-scroll @load="load" side="end" class="messages_list">
+            <div class="message" :key="message.id" v-for="message in messages"
+                    :style="{alignSelf: idUser === message.idUser ? 'flex-end' : 'flex-start'}">
+                {{message.text}}
             </div>
-            <el-input placeholder="Введите сообщение" v-model="messageInput" type="textarea"></el-input>
-            <el-button @click="sendMessage">Отправить</el-button>
-        </div>
-    </el-card>
+        </v-infinite-scroll>
+        <v-text-field class="text_area" label="Введите сообщение" v-model="messageInput"></v-text-field>
+        <v-btn @click="sendMessage">Отправить</v-btn>
+    </div>
 </template>
 
 <style scoped>
     .chat {
         display: grid;
-        grid-template: 630px 100px / 800px;
+        grid-template: 600px 100px 50px / 760px;
+    }
+
+    .message {
+        border: 1px solid black;
+        padding: 5px;
+        display: block;
+        margin-top: 10px;
+        width: 200px;
+    }
+
+    .text_area {
+        height: 100%;
+        margin-top: 10px;
     }
 
     .messages_list {
-        height: 530px;
+        height: 100%;
         display: flex;
-        justify-content: flex-end;
-        flex-direction: column;
+        padding-right: 20px;
+        padding-left: 20px;
+        flex-direction: column-reverse;
         overflow-y: scroll;
         list-style-type: none;
     }

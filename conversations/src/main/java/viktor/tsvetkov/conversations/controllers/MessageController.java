@@ -8,13 +8,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import viktor.tsvetkov.conversations.dto.ChatWithInterlocutor;
 import viktor.tsvetkov.conversations.dto.MessageDto;
-import viktor.tsvetkov.conversations.dto.MessagesForChatDto;
 import viktor.tsvetkov.conversations.entities.Message;
 import viktor.tsvetkov.conversations.services.impl.MessageService;
 
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -40,8 +38,10 @@ public class MessageController {
     }
 
     @GetMapping("findMessagesByChatId")
-    public List<MessagesForChatDto> findMessagesByChatId(@RequestParam(value = "id") UUID id) {
-        return messageService.findMessagesByIdChat(id);
+    public Map<String, Object> findMessagesByChatId(@RequestParam(value = "id") UUID id,
+                                                    @RequestParam(value = "start") int start,
+                                                    @RequestParam(value = "pageSize") int pageSize) {
+        return messageService.findMessagesByIdChat(id, start, pageSize);
     }
 
 }

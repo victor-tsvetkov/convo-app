@@ -23,8 +23,42 @@ public class QueryService {
         }
     }
 
+    private void setPaginationParameters(@Nonnull Query query, int start, int pageSize) {
+        query.setFirstResult(start);
+        query.setMaxResults(pageSize);
+    }
+
+    public <T> List<T> executeSql(String sql, Class<T> className,
+                                  @Nullable Map<String, Object> params,
+                                  int start, int pageSize) {
+        Query query = createNativeQuery(sql, className);
+        if (params != null && !params.isEmpty()) {
+            setQueryParameters(query, params);
+        }
+        setPaginationParameters(query, start, pageSize);
+        return (List<T>) query.getResultList();
+    }
+
+    private <T> Query createNativeQuery(@Nonnull String sql, @Nullable Class<T> className) {
+        Query query;
+        if (className != null) {
+            query = entityManager.createNativeQuery(sql, className);
+        } else {
+            query = entityManager.createNativeQuery(sql);
+        }
+        return query;
+    }
+
+    public Long executeCountSql(String sql, @Nullable Map<String, Object> params) {
+        Query query = createNativeQuery(sql, null);
+        if (params != null && !params.isEmpty()) {
+            setQueryParameters(query, params);
+        }
+        return (Long) query.getSingleResult();
+    }
+
     public <T> List<T> executeSql(String sql, Class<T> className, @Nullable Map<String, Object> params) {
-        Query query = entityManager.createNativeQuery(sql, className);
+        Query query = createNativeQuery(sql, className);
         if (params != null && !params.isEmpty()) {
             setQueryParameters(query, params);
         }

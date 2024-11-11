@@ -9,8 +9,10 @@ import viktor.tsvetkov.conversations.entities.Message;
 import viktor.tsvetkov.conversations.repositories.MessageRepository;
 import viktor.tsvetkov.conversations.services.QueryService;
 import static viktor.tsvetkov.conversations.utils.query.Queries.GET_MESSAGES_BY_ID_CHAT;
+import static viktor.tsvetkov.conversations.utils.query.Queries. MESSAGES_COUNT_CHAT;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -44,7 +46,13 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
-    public List<MessagesForChatDto> findMessagesByIdChat(UUID id) {
-        return queryService.executeSql(GET_MESSAGES_BY_ID_CHAT, MessagesForChatDto.class, Map.of("chatId", id));
+    public Map<String, Object> findMessagesByIdChat(UUID id, int start, int pageSize) {
+        List<MessagesForChatDto> data = queryService.executeSql(GET_MESSAGES_BY_ID_CHAT,
+                MessagesForChatDto.class, Map.of("chatId", id), start, pageSize);
+        long totalQuantity = queryService.executeCountSql(MESSAGES_COUNT_CHAT, Map.of("chatId", id));
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", data);
+        result.put("totalQuantity", totalQuantity);
+        return result;
     }
 }

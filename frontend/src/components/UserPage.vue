@@ -2,7 +2,6 @@
     import {useUserStore} from "@/stores/user.js";
     import {storeToRefs} from "pinia";
     import {onMounted} from "vue";
-    import axios from "axios";
 
     const userStore = useUserStore();
     const {userData, question, pointsLabel, oppositeGender} = storeToRefs(userStore);
@@ -23,7 +22,7 @@
 </script>
 
 <template>
-    <el-card style="width: 800px;" class="common-layout">
+    <v-card style="width: 800px;" class="common-layout">
         <el-header>
             <div>{{userData.name}}</div>
             <div>{{pointsLabel}}: {{userData.points}}</div>
@@ -42,7 +41,7 @@
                 </div>
             </div>
         </el-main>
-    </el-card>
+    </v-card>
 </template>
 
 <style scoped>

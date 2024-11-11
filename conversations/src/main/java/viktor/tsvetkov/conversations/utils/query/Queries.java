@@ -47,5 +47,7 @@ public class Queries {
     public static final String SEARCH_MESSAGE = GET_CHATS_WITH_INTERLOCUTOR + CONDITION_SEARCH_MESSAGE;
 
     public static final String GET_MESSAGES_BY_ID_CHAT = "select m.id as id, m.creation_date as creationDate, m.id_user as idUser, m.text as text " +
-            "from messages m where m.id_chat = :chatId order by m.creation_date";
+            "from messages m where m.id_chat = :chatId order by m.creation_date desc";
+
+    public static final String MESSAGES_COUNT_CHAT = "select count(*) from messages where id_chat = :chatId";
 }
