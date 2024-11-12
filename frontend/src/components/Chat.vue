@@ -39,9 +39,12 @@ import {useMessagesStore} from "@/stores/messages.js";
     <div class="chat">
         <v-infinite-scroll @load="load" side="end" class="messages_list">
             <div class="message" :key="message.id" v-for="message in messages"
-                    :style="{alignSelf: idUser === message.idUser ? 'flex-end' : 'flex-start'}">
+                    :style="{alignSelf: idUser === message.idUser ? 'flex-end' : 'flex-start',
+                    display: 'flex', justifyContent: 'space-between'}">
                 {{message.text}}
+                <span class="time">{{message.creationDate}}</span>
             </div>
+            <template v-slot:empty></template>
         </v-infinite-scroll>
         <v-text-field class="text_area" label="Введите сообщение" v-model="messageInput"></v-text-field>
         <v-btn @click="sendMessage">Отправить</v-btn>
@@ -59,7 +62,10 @@ import {useMessagesStore} from "@/stores/messages.js";
         padding: 5px;
         display: block;
         margin-top: 10px;
-        width: 200px;
+        width: 210px;
+        span {
+            margin-top: 10px;
+        }
     }
 
     .text_area {

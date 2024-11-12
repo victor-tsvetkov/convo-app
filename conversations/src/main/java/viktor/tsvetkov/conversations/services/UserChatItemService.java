@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import viktor.tsvetkov.conversations.dto.ChatWithInterlocutor;
 import viktor.tsvetkov.conversations.entities.UserChatItem;
 import viktor.tsvetkov.conversations.repositories.UserChatItemRepository;
-import static viktor.tsvetkov.conversations.utils.query.Queries.INTERLOCUTOR_CHAT_LATEST_MESSAGE;
-import static viktor.tsvetkov.conversations.utils.query.Queries.SEARCH_MESSAGE;
+import static viktor.tsvetkov.conversations.utils.query.SqlQueries.INTERLOCUTOR_CHAT_LATEST_MESSAGE;
+import static viktor.tsvetkov.conversations.utils.query.SqlQueries.SEARCH_MESSAGE;
 
 import java.util.HashMap;
 import java.util.List;

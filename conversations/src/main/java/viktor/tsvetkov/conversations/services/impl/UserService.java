@@ -12,7 +12,7 @@ import viktor.tsvetkov.conversations.enums.Sex;
 import viktor.tsvetkov.conversations.exceptions.NoUsersToTalkException;
 import viktor.tsvetkov.conversations.repositories.UserRepository;
 import viktor.tsvetkov.conversations.services.QueryService;
-import viktor.tsvetkov.conversations.utils.query.Queries;
+import viktor.tsvetkov.conversations.utils.query.SqlQueries;
 
 import static viktor.tsvetkov.conversations.utils.RandomUtils.getRandomInt;
 
@@ -69,9 +69,9 @@ public class UserService {
         String sql;
         if (sex != null) {
             params.put("sex", sex.toString());
-            sql = Queries.USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH_BY_SEX;
+            sql = SqlQueries.USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH_BY_SEX;
         } else {
-            sql = Queries.USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH;
+            sql = SqlQueries.USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH;
         }
         return queryService.executeSql(sql, User.class, params);
     }

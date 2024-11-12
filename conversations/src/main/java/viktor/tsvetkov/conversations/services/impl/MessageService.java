@@ -8,8 +8,8 @@ import viktor.tsvetkov.conversations.dto.MessagesForChatDto;
 import viktor.tsvetkov.conversations.entities.Message;
 import viktor.tsvetkov.conversations.repositories.MessageRepository;
 import viktor.tsvetkov.conversations.services.QueryService;
-import static viktor.tsvetkov.conversations.utils.query.Queries.GET_MESSAGES_BY_ID_CHAT;
-import static viktor.tsvetkov.conversations.utils.query.Queries. MESSAGES_COUNT_CHAT;
+import static viktor.tsvetkov.conversations.utils.query.SqlQueries.MESSAGES_IN_CHAT;
+import static viktor.tsvetkov.conversations.utils.query.SqlQueries.MESSAGES_QUANTITY_IN_CHAT;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -47,9 +47,9 @@ public class MessageService {
     }
 
     public Map<String, Object> findMessagesByIdChat(UUID id, int start, int pageSize) {
-        List<MessagesForChatDto> data = queryService.executeSql(GET_MESSAGES_BY_ID_CHAT,
+        List<MessagesForChatDto> data = queryService.executeSql(MESSAGES_IN_CHAT,
                 MessagesForChatDto.class, Map.of("chatId", id), start, pageSize);
-        long totalQuantity = queryService.executeCountSql(MESSAGES_COUNT_CHAT, Map.of("chatId", id));
+        long totalQuantity = queryService.executeCountSql(MESSAGES_QUANTITY_IN_CHAT, Map.of("chatId", id));
         Map<String, Object> result = new HashMap<>();
         result.put("data", data);
         result.put("totalQuantity", totalQuantity);

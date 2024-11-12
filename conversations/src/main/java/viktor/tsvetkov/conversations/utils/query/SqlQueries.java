@@ -1,6 +1,6 @@
 package viktor.tsvetkov.conversations.utils.query;
 
-public class Queries {
+public class SqlQueries {
     public static final String USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH = """
             select u.* from users u
             where u.id not in (
@@ -15,7 +15,7 @@ public class Queries {
     String USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH_BY_SEX = USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH + BY_SEX;
 
 
-    private static final String GET_CHATS_WITH_INTERLOCUTOR = """
+    private static final String CHATS_WITH_INTERLOCUTOR = """
                 with c_w_i as (
                             select c.chat_id, u.id as id_interlocutor, u.name as interlocutor_name
                             from
@@ -43,11 +43,11 @@ public class Queries {
              where chat_id = m.id_chat and lower(m.text) like :searchParam
             order by m.creation_date desc;""";
 
-    public static final String INTERLOCUTOR_CHAT_LATEST_MESSAGE = GET_CHATS_WITH_INTERLOCUTOR + CONDITION_LATEST_MESSAGE;
-    public static final String SEARCH_MESSAGE = GET_CHATS_WITH_INTERLOCUTOR + CONDITION_SEARCH_MESSAGE;
+    public static final String INTERLOCUTOR_CHAT_LATEST_MESSAGE = CHATS_WITH_INTERLOCUTOR + CONDITION_LATEST_MESSAGE;
+    public static final String SEARCH_MESSAGE = CHATS_WITH_INTERLOCUTOR + CONDITION_SEARCH_MESSAGE;
 
-    public static final String GET_MESSAGES_BY_ID_CHAT = "select m.id as id, m.creation_date as creationDate, m.id_user as idUser, m.text as text " +
+    public static final String MESSAGES_IN_CHAT = "select m.id as id, to_char(m.creation_date, 'HH24:MI') as creationDate, m.id_user as idUser, m.text as text " +
             "from messages m where m.id_chat = :chatId order by m.creation_date desc";
 
-    public static final String MESSAGES_COUNT_CHAT = "select count(*) from messages where id_chat = :chatId";
+    public static final String MESSAGES_QUANTITY_IN_CHAT = "select count(*) from messages where id_chat = :chatId";
 }
