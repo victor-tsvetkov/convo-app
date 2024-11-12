@@ -28,8 +28,8 @@ public class MessageController {
     }
 
     @PutMapping
-    public void save(@RequestBody MessageDto messageDto) {
-        messageService.save(messageDto);
+    public Message save(@RequestBody MessageDto messageDto) {
+        return messageService.save(messageDto);
     }
 
     @DeleteMapping

@@ -7,9 +7,8 @@ export const useMessagesStore = defineStore("messages", () => {
     let chatMessages = ref([]);
 
     let totalMessagesQuantity = ref(0);
-    let pagesQuantity = ref(0);
     let currentPage = ref(0);
-    const pageSize = 17;
+    const pageSize = 15;
     let start = currentPage.value * pageSize;
 
     function loadDataMessages(idUser, searchParam) {
@@ -25,39 +24,45 @@ export const useMessagesStore = defineStore("messages", () => {
         }).catch(e => console.error(e));
     }
 
-
-    const loadMessagesByChatId = (idChat, {done}) => {
-        axios.get("message/findMessagesByChatId", {
+    const loadMessagesByChat = (idChat, start, pageSize) => {
+        return axios.get("message/findMessagesByChatId", {
             params: {
                 id: idChat,
                 start,
                 pageSize
             }
-        })
-        .then(result => {
-            totalMessagesQuantity.value = result.data.totalQuantity;
-            pagesQuantity.value = Math.ceil(totalMessagesQuantity.value / pageSize);
-            if (currentPage.value < pagesQuantity.value) {
-                console.log(result);
-                setData([...chatMessages.value, ...result.data.data]);
-                currentPage.value += 1;
-                start = currentPage.value * pageSize;
-                done('ok');
-            } else {
-                done('empty');
-            }
-        }).catch(e => console.error(e));
+        });
+    }
+
+    const saveMessages = async (idChat) => {
+        const loadedResult = await loadMessagesByChat(idChat, start, pageSize);
+        totalMessagesQuantity.value = loadedResult.data.totalQuantity;
+        if (isAbleToLoadMoreMessages(totalMessagesQuantity.value, currentPage.value, pageSize)) {
+            setData([...chatMessages.value, ...loadedResult.data.data]);
+            currentPage.value += 1;
+            start = currentPage.value * pageSize;
+            return true;
+        }
+        return false;
+    }
+
+    const isAbleToLoadMoreMessages = (total, currentPage, pageSize) => {
+        const pagesQuantity = Math.ceil(total / pageSize);
+        return currentPage < pagesQuantity;
     }
 
     const sendMessage = (messageDto) => {
-        const idChat = messageDto.idChat;
         axios.put('message', messageDto)
         .then(result => {
-            // loadMessagesByChatId(idChat, );
+            const newMessage = {
+                id: result.data.id,
+                creationDate: result.data.creationDate,
+                idUser: result.data.idUser,
+                text: result.data.text
+            };
+            chatMessages.value.unshift(newMessage);
         })
     }
-
-
 
     const setData = (data) => {
         chatMessages.value = [...data];
@@ -69,10 +74,8 @@ export const useMessagesStore = defineStore("messages", () => {
         start = 0;
     }
 
-
-
     return {
         dataChats, loadDataMessages, chatMessages, totalMessagesQuantity,
-        clearData, setData, loadMessagesByChatId, sendMessage
+        clearData, setData, saveMessages, sendMessage
     }
 });

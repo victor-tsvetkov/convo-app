@@ -25,7 +25,7 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final QueryService queryService;
 
-    public void save(MessageDto messageDto) {
+    public Message save(MessageDto messageDto) {
         Message message = new Message();
         if (messageDto.id() != null) {
             message.setUpdateDate(LocalDateTime.now());
@@ -35,7 +35,7 @@ public class MessageService {
         message.setIdChat(messageDto.idChat());
         message.setIdUser(messageDto.idUser());
         message.setText(messageDto.text());
-        messageRepository.save(message);
+        return messageRepository.save(message);
     }
 
     public Message findMessageById(UUID id) {
