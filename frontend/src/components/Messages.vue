@@ -16,9 +16,6 @@
 
     let searchMessageValue = ref('');
 
-    console.log("data chats");
-    console.log(dataChats);
-
     onMounted(() => {
         loadDataMessages(idUser, searchMessageValue.value);
     });

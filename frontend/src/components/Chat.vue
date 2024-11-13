@@ -8,7 +8,7 @@ import {useMessagesStore} from "@/stores/messages.js";
     });
 
     const messagesStore = useMessagesStore();
-    const {clearData, saveMessages} = messagesStore;
+    const {clearData, saveMessages, setPaginationDoneFunc} = messagesStore;
 
     const {idUser, idChat} = props;
 
@@ -25,13 +25,15 @@ import {useMessagesStore} from "@/stores/messages.js";
         }
     }
 
-    const load = async ({done}) => {
-        const bool = await saveMessages(idChat, {done});
-        let status = bool ? "ok" : "empty";
-        done(status);
+    const load = ({done}) => {
+        setPaginationDoneFunc(done);
+        saveMessages(idChat);
     }
 
-    onUnmounted(clearData);
+    onUnmounted(() => {
+        clearData();
+        setPaginationDoneFunc(null);
+    });
 
 </script>
 

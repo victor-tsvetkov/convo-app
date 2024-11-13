@@ -6,20 +6,24 @@ export const useMessagesStore = defineStore("messages", () => {
     let dataChats = ref(null);
     let chatMessages = ref([]);
 
+    let paginationDoneFunc = ref(null);
+
     let totalMessagesQuantity = ref(0);
     let currentPage = ref(0);
     const pageSize = 15;
     let start = currentPage.value * pageSize;
 
+    const setPaginationDoneFunc = (func) => {
+        paginationDoneFunc.value = func;
+    }
+
     function loadDataMessages(idUser, searchParam) {
-        console.log(idUser);
         axios.get("chatItem/groupChatWithMessages", {
             params: {
                 idUser,
                 searchParam
             }
         }).then(result => {
-            console.log(result);
             dataChats.value = result.data;
         }).catch(e => console.error(e));
     }
@@ -41,9 +45,10 @@ export const useMessagesStore = defineStore("messages", () => {
             setData([...chatMessages.value, ...loadedResult.data.data]);
             currentPage.value += 1;
             start = currentPage.value * pageSize;
-            return true;
+            paginationDoneFunc.value('ok');
+        } else {
+            paginationDoneFunc.value('empty');
         }
-        return false;
     }
 
     const isAbleToLoadMoreMessages = (total, currentPage, pageSize) => {
@@ -53,14 +58,9 @@ export const useMessagesStore = defineStore("messages", () => {
 
     const sendMessage = (messageDto) => {
         axios.put('message', messageDto)
-        .then(result => {
-            const newMessage = {
-                id: result.data.id,
-                creationDate: result.data.creationDate,
-                idUser: result.data.idUser,
-                text: result.data.text
-            };
-            chatMessages.value.unshift(newMessage);
+        .then(() => {
+            clearData();
+            saveMessages(messageDto.idChat);
         })
     }
 
@@ -76,6 +76,6 @@ export const useMessagesStore = defineStore("messages", () => {
 
     return {
         dataChats, loadDataMessages, chatMessages, totalMessagesQuantity,
-        clearData, setData, saveMessages, sendMessage
+        clearData, setData, saveMessages, sendMessage, setPaginationDoneFunc
     }
 });
