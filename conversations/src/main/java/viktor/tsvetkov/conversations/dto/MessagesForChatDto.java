@@ -6,6 +6,8 @@ public record MessagesForChatDto (
         UUID id,
         String creationDate,
         UUID idUser,
-        String text
+        String text,
+        String formattedDay
 ) {
+
 }

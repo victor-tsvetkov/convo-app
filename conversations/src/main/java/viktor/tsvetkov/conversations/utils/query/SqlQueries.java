@@ -27,7 +27,7 @@ public class SqlQueries {
                                when m.creation_date\\:\\:date = 'today'
                                    then to_char(m.creation_date, 'HH24:MI')
                                when extract(days from current_date - m.creation_date) <= 7
-                                   then to_char(m.creation_date, 'day')
+                                   then to_char(m.creation_date, 'TMday')
                                when extract(days from current_date - m.creation_date) > 7 and extract(years from age(m.creation_date)) < 1
                                    then to_char(m.creation_date, 'dd.MM')
                                when extract(years from age(m.creation_date)) >= 1
@@ -46,7 +46,18 @@ public class SqlQueries {
     public static final String INTERLOCUTOR_CHAT_LATEST_MESSAGE = CHATS_WITH_INTERLOCUTOR + CONDITION_LATEST_MESSAGE;
     public static final String SEARCH_MESSAGE = CHATS_WITH_INTERLOCUTOR + CONDITION_SEARCH_MESSAGE;
 
-    public static final String MESSAGES_IN_CHAT = "select m.id as id, to_char(m.creation_date, 'HH24:MI') as creationDate, m.id_user as idUser, m.text as text " +
+    public static final String MESSAGES_IN_CHAT = "select m.id as id, to_char(m.creation_date, 'HH24:MI') as creationDate, m.id_user as idUser, m.text as text, " +
+            "case" +
+            "           when m.creation_date\\:\\:date = 'today'" +
+            "               then 'сегодня'" +
+            "            when m.creation_date\\:\\:date = 'yesterday'" +
+            "                then 'вчера'" +
+            "            when extract(years from age(m.creation_date)) < 1" +
+            "                then to_char(m.creation_date, 'dd TMmonth')" +
+            "           when extract(years from age(m.creation_date)) > 1" +
+            "               then to_char(m.creation_date, 'dd TMMonth yyyy')" +
+            "       end as formattedDay" +
+            " " +
             "from messages m where m.id_chat = :chatId order by m.creation_date desc";
 
     public static final String MESSAGES_QUANTITY_IN_CHAT = "select count(*) from messages where id_chat = :chatId";
