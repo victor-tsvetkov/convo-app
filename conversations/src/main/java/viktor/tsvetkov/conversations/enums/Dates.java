@@ -45,7 +45,7 @@ public class Dates {
         MAY("май", "май", "мая", "may", "may"),
         JUNE("июнь", "июн", "июня", "june", "jun"),
         JULY("июль", "июл", "июля", "july", "jul"),
-        AUGUST("", "", "", "", ""),
+        AUGUST("август", "авг", "августа", "august", "aug"),
         SEPTEMBER("сентябрь", "сен", "сентября", "september", "sep"),
         OCTOBER("октябрь", "окт", "октября", "october", "oct"),
         NOVEMBER("ноябрь", "ноя", "ноября", "november", "nov"),

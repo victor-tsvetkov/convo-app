@@ -11,6 +11,8 @@ import viktor.tsvetkov.conversations.services.QueryService;
 import static viktor.tsvetkov.conversations.utils.query.SqlQueries.MESSAGES_IN_CHAT;
 import static viktor.tsvetkov.conversations.utils.query.SqlQueries.MESSAGES_QUANTITY_IN_CHAT;
 
+import static viktor.tsvetkov.conversations.utils.DateTimeUtils.transformDate;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +51,11 @@ public class MessageService {
     public Map<String, Object> findMessagesByIdChat(UUID id, int start, int pageSize) {
         List<MessagesForChatDto> data = queryService.executeSql(MESSAGES_IN_CHAT,
                 MessagesForChatDto.class, Map.of("chatId", id), start, pageSize);
+        for (MessagesForChatDto chatDto : data) {
+            if (chatDto.getFormattedDay() != null) {
+                chatDto.setFormattedDay(transformDate(chatDto.getFormattedDay()));
+            }
+        }
         long totalQuantity = queryService.executeCountSql(MESSAGES_QUANTITY_IN_CHAT, Map.of("chatId", id));
         Map<String, Object> result = new HashMap<>();
         result.put("data", data);

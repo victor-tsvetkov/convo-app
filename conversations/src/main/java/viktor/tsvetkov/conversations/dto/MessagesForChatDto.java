@@ -1,13 +1,18 @@
 package viktor.tsvetkov.conversations.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.UUID;
 
-public record MessagesForChatDto (
-        UUID id,
-        String creationDate,
-        UUID idUser,
-        String text,
-        String formattedDay
-) {
-
+@Getter
+@Setter
+@AllArgsConstructor
+public class MessagesForChatDto {
+    private UUID id;
+    private String creationDate;
+    private UUID idUser;
+    private String text;
+    private String formattedDay;
 }
