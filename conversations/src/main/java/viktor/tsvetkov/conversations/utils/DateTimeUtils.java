@@ -36,6 +36,12 @@ public class DateTimeUtils {
                 .toLocalDateTime();
     }
 
+    /**
+     * Преобразует дату формата 'dd month' в дату в родительном падеже
+     * Например, дату '10 ноябрь' преобразует в '10 ноября'
+     * @param date - дата в формате 'dd month', например, '10 ноябрь'
+     * @return - возвращает дату в родительном падеже
+     */
     public static String transformDate(String date) {
         if (!date.equals(TODAY.getRuName()) && !date.equals(YESTERDAY.getRuName())) {
             String numbersOfDate = transformAndExtractNumbersFromDate(date);
@@ -45,6 +51,13 @@ public class DateTimeUtils {
         return date;
     }
 
+    /**
+     * Извлекает и преобразует число из даты формата 'dd month'
+     * Например, результат работы с датой '10 ноябрь' будет '10'
+     * С датой '03 ноябрь' будет '3'
+     * @param date - дата в формате 'dd month', например, '10 ноябрь'
+     * @return возвращает число дня
+     */
     private static String transformAndExtractNumbersFromDate(String date) {
         if (date.charAt(0) == '0') {
             return date.substring(1, 3);
@@ -52,11 +65,24 @@ public class DateTimeUtils {
         return date.substring(0, 2);
     }
 
+    /**
+     * Извлекает месяц из даты формата 'dd month'
+     * Например, результат работы с датой '10 ноябрь' будет 'ноябрь'
+     * @param date - дата в формате 'dd month', например, '10 ноябрь'
+     * @return - возвращает месяц
+     */
     private static String extractMonthFromDate(String date) {
         return date.substring(date.indexOf(" ") + 1);
     }
 
+    /**
+     * Преобразует название месяца из именительного падежа в родительный
+     * Например, 'ноябрь' преобразует в 'ноября'
+     * @param month - название месяца в именительном падеже
+     * @return - возвращает месяц в родительном падеже
+     */
     private static String transformMonth(String month) {
+        month = month.toLowerCase();
         if (month.equals(JANUARY.getRuName())) {
             month = JANUARY.getCaseSpecificRuName();
         } else if (month.equals(FEBRUARY.getRuName())) {
