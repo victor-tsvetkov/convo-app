@@ -48,14 +48,42 @@ public class SqlQueries {
 
     public static final String MESSAGES_IN_CHAT = "select m.id as id, to_char(m.creation_date, 'HH24:MI') as creationDate, m.id_user as idUser, m.text as text, " +
             "case" +
-            "           when m.creation_date\\:\\:date = 'today'" +
-            "               then 'сегодня'" +
+            "           when m.creation_date\\:\\:date = 'today' " +
+            "               then " +
+            "                      case" +
+            "                      when m.creation_date = (select min(creation_date) from messages " +
+            "                                                                          where creation_date\\:\\:date = 'today' " +
+            "                                                                          and id_chat = :chatId) " +
+            "                            then 'сегодня' " +
+            "                        else null " +
+            "                    end " +
             "            when m.creation_date\\:\\:date = 'yesterday'" +
-            "                then 'вчера'" +
+            "                then " +
+            "                       case\n" +
+            "                        when m.creation_date = (select min(creation_date) from messages\n" +
+            "                                                                            where creation_date\\:\\:date = 'yesterday'\n" +
+            "                                                                            and id_chat = :chatId)\n" +
+            "                            then 'вчера'\n" +
+            "                        else null\n" +
+            "                    end" +
             "            when extract(years from age(m.creation_date)) < 1" +
-            "                then to_char(m.creation_date, 'dd TMmonth')" +
+            "                then " +
+            "                       case\n" +
+            "                        when m.creation_date = (select min(creation_date) from messages\n" +
+            "                                                                          where m.creation_date\\:\\:date = creation_date\\:\\:date\n" +
+            "                                                                          and id_chat = :chatId)\n" +
+            "                        then to_char(m.creation_date, 'dd TMmonth')\n" +
+            "                        else null\n" +
+            "                    end" +
             "           when extract(years from age(m.creation_date)) > 1" +
-            "               then to_char(m.creation_date, 'dd TMMonth yyyy')" +
+            "               then " +
+            "                   case\n" +
+            "                        when m.creation_date = (select min(creation_date) from messages\n" +
+            "                                                where m.creation_date\\:\\:date = creation_date\\:\\:date\n" +
+            "                                                  and id_chat = :chatId)\n" +
+            "                        then to_char(m.creation_date, 'dd TMmonth yyyy')\n" +
+            "                        else null\n" +
+            "                    end" +
             "       end as formattedDay" +
             " " +
             "from messages m where m.id_chat = :chatId order by m.creation_date desc";

@@ -40,12 +40,19 @@ import {useMessagesStore} from "@/stores/messages.js";
 <template>
     <div class="chat">
         <v-infinite-scroll @load="load" side="end" class="messages_list">
-            <div class="message" :key="message.id" v-for="message in messages"
-                    :style="{alignSelf: idUser === message.idUser ? 'flex-end' : 'flex-start',
+            <template v-for="message in messages" :key="message.id">
+                <div class="message"
+                     :style="{alignSelf: idUser === message.idUser ? 'flex-end' : 'flex-start',
                     display: 'flex', justifyContent: 'space-between'}">
-                {{message.text}}
-                <span class="time">{{message.creationDate}}</span>
-            </div>
+                    {{message.text}}
+                    <span class="time">{{message.creationDate}}</span>
+                </div>
+                <div v-if="!!message.formattedDay" style="text-align: center"
+                     class="time">
+                    {{message.formattedDay}}
+                </div>
+            </template>
+
             <template v-slot:empty></template>
         </v-infinite-scroll>
         <v-text-field class="text_area" label="Введите сообщение" v-model="messageInput"></v-text-field>
