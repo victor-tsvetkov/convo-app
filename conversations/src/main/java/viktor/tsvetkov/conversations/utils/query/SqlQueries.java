@@ -48,7 +48,7 @@ public class SqlQueries {
     public static final String INTERLOCUTOR_CHAT_LATEST_MESSAGE = CHATS_WITH_INTERLOCUTOR + CONDITION_LATEST_MESSAGE;
     public static final String SEARCH_MESSAGE = CHATS_WITH_INTERLOCUTOR + CONDITION_SEARCH_MESSAGE;
 
-    public static final String MESSAGES_IN_CHAT = "select m.id as id, to_char(m.creation_date, 'HH24:MI') as creationDate, m.id_user as idUser, m.text as text, " +
+    public static final String MESSAGES_IN_CHAT = "select m.id as id, m.is_read as isRead, to_char(m.creation_date, 'HH24:MI') as creationDate, m.id_user as idUser, m.text as text, " +
             "case" +
             "           when m.creation_date\\:\\:date = 'today' " +
             "               then " +

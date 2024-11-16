@@ -11,6 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class MessagesForChatDto {
     private UUID id;
+    private boolean isRead;
     private String creationDate;
     private UUID idUser;
     private String text;

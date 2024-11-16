@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,4 +39,7 @@ public class Message {
 
     @Column(name = "text")
     private String text;
+
+    @Column(name = "is_read", nullable = false)
+    private boolean isRead;
 }

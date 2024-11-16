@@ -12,6 +12,7 @@ import viktor.tsvetkov.conversations.dto.MessageDto;
 import viktor.tsvetkov.conversations.entities.Message;
 import viktor.tsvetkov.conversations.services.impl.MessageService;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -42,6 +43,11 @@ public class MessageController {
                                                     @RequestParam(value = "start") int start,
                                                     @RequestParam(value = "pageSize") int pageSize) {
         return messageService.findMessagesByIdChat(id, start, pageSize);
+    }
+
+    @GetMapping("readMessages")
+    public void readMessages(@RequestParam(value = "idsOfMessages[]") List<UUID> idsOfMessages) {
+        messageService.readMessages(idsOfMessages);
     }
 
 }

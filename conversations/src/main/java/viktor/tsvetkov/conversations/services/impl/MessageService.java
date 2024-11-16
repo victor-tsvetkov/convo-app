@@ -1,5 +1,6 @@
 package viktor.tsvetkov.conversations.services.impl;
 
+import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class MessageService {
             message.setUpdateDate(LocalDateTime.now());
         } else {
             message.setCreationDate(LocalDateTime.now());
+            message.setRead(false);
         }
         message.setIdChat(messageDto.idChat());
         message.setIdUser(messageDto.idUser());
@@ -61,5 +63,9 @@ public class MessageService {
         result.put("messages", messages);
         result.put("totalQuantity", totalQuantity);
         return result;
+    }
+
+    public void readMessages(@Nonnull List<UUID> idsOfMessages) {
+        messageRepository.readMessages(idsOfMessages);
     }
 }
