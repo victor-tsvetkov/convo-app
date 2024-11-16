@@ -26,6 +26,8 @@ public class SqlQueries {
                             case
                                when m.creation_date\\:\\:date = 'today'
                                    then to_char(m.creation_date, 'HH24:MI')
+                               when m.creation_date\\:\\:date = 'yesterday'
+                                   then 'вчера'
                                when extract(days from current_date - m.creation_date) <= 7
                                    then to_char(m.creation_date, 'TMday')
                                when extract(days from current_date - m.creation_date) > 7 and extract(years from age(m.creation_date)) < 1

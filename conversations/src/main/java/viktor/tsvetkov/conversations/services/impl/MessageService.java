@@ -48,17 +48,17 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
-    public Map<String, Object> findMessagesByIdChat(UUID id, int start, int pageSize) {
-        List<MessagesForChatDto> data = queryService.executeSql(MESSAGES_IN_CHAT,
-                MessagesForChatDto.class, Map.of("chatId", id), start, pageSize);
-        for (MessagesForChatDto chatDto : data) {
-            if (chatDto.getFormattedDay() != null) {
-                chatDto.setFormattedDay(transformDate(chatDto.getFormattedDay()));
+    public Map<String, Object> findMessagesByIdChat(UUID idChat, int start, int pageSize) {
+        List<MessagesForChatDto> messages = queryService.executeSql(MESSAGES_IN_CHAT,
+                MessagesForChatDto.class, Map.of("chatId", idChat), start, pageSize);
+        for (MessagesForChatDto message : messages) {
+            if (message.getFormattedDay() != null) {
+                message.setFormattedDay(transformDate(message.getFormattedDay()));
             }
         }
-        long totalQuantity = queryService.executeCountSql(MESSAGES_QUANTITY_IN_CHAT, Map.of("chatId", id));
+        long totalQuantity = queryService.executeCountSql(MESSAGES_QUANTITY_IN_CHAT, Map.of("chatId", idChat));
         Map<String, Object> result = new HashMap<>();
-        result.put("data", data);
+        result.put("messages", messages);
         result.put("totalQuantity", totalQuantity);
         return result;
     }

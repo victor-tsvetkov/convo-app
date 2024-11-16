@@ -9,7 +9,7 @@ import viktor.tsvetkov.conversations.dto.MessageDto;
 import viktor.tsvetkov.conversations.dto.QuestionDto;
 import viktor.tsvetkov.conversations.entities.Chat;
 import viktor.tsvetkov.conversations.entities.User;
-import viktor.tsvetkov.conversations.entities.UserChatItem;
+import viktor.tsvetkov.conversations.entities.ChatItem;
 import viktor.tsvetkov.conversations.enums.Sex;
 import viktor.tsvetkov.conversations.services.impl.ChatService;
 import viktor.tsvetkov.conversations.services.impl.MessageService;
@@ -21,38 +21,34 @@ public class QuestionService {
     private final UserService userService;
     private final ChatService chatService;
     private final MessageService messageService;
-    private final UserChatItemService userChatItemService;
+    private final ChatItemService chatItemService;
 
     @Transactional
     public void askQuestion(@Nonnull QuestionDto questionDto) {
-        User askingUser = userService.findById(questionDto.idUser());
+        User currentUser = userService.findById(questionDto.idUser());
         Sex askedSex = null;
         long points = 10;
         if (questionDto.oppositeGender()) {
-            if (askingUser.getSex().equals(Sex.MALE)) {
+            if (currentUser.getSex().equals(Sex.MALE)) {
                 askedSex = Sex.FEMALE;
             } else {
                 askedSex = Sex.MALE;
             }
             points = 30;
         }
-        User randomAskedUser = userService.getRandomUserToChat(askingUser, askedSex);
+        User randomUser = userService.getRandomUserToChat(currentUser.getId(), askedSex);
         ChatDto chatDto = new ChatDto(null);
         Chat chat = chatService.save(chatDto);
-        messageService.save(new MessageDto(null, chat.getId(), askingUser.getId(), questionDto.question()));
-        askingUser.setPoints(askingUser.getPoints() - points);
-        userService.save(askingUser);
-        UserChatItem askingUserChatItem = new UserChatItem();
-        askingUserChatItem.setChatId(chat.getId());
-        askingUserChatItem.setUserId(askingUser.getId());
-        UserChatItem randomUserChatItem = new UserChatItem();
-        randomUserChatItem.setChatId(chat.getId());
-        randomUserChatItem.setUserId(randomAskedUser.getId());
-        userChatItemService.save(askingUserChatItem);
-        userChatItemService.save(randomUserChatItem);
-    }
-
-    public void sendMessage(MessageDto messageDto) {
-        messageService.save(messageDto);
+        messageService.save(new MessageDto(null, chat.getId(), currentUser.getId(), questionDto.question()));
+        currentUser.setPoints(currentUser.getPoints() - points);
+        userService.save(currentUser);
+        ChatItem chatItemOfCurrentUser = new ChatItem();
+        chatItemOfCurrentUser.setChatId(chat.getId());
+        chatItemOfCurrentUser.setUserId(currentUser.getId());
+        ChatItem chatItemOfRandomUser = new ChatItem();
+        chatItemOfRandomUser.setChatId(chat.getId());
+        chatItemOfCurrentUser.setUserId(randomUser.getId());
+        chatItemService.save(chatItemOfCurrentUser);
+        chatItemService.save(chatItemOfCurrentUser);
     }
 }

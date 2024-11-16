@@ -63,9 +63,9 @@ public class UserService {
         return users.get(getRandomInt(0, users.size())-1);
     }
 
-    public List<User> usersCurrentUserDoesNotHaveChatWith(User currentUser, @Nullable Sex sex) {
+    public List<User> usersCurrentUserDoesNotHaveChatWith(UUID currentUserId, @Nullable Sex sex) {
         Map<String, Object> params = new HashMap<>(2);
-        params.put("currentUserId", currentUser.getId());
+        params.put("currentUserId", currentUserId);
         String sql;
         if (sex != null) {
             params.put("sex", sex.toString());
@@ -76,8 +76,8 @@ public class UserService {
         return queryService.executeSql(sql, User.class, params);
     }
 
-    public User getRandomUserToChat(User currentUser, @Nullable Sex sex) {
-        List<User> users = usersCurrentUserDoesNotHaveChatWith(currentUser, sex);
+    public User getRandomUserToChat(UUID currentUserId, @Nullable Sex sex) {
+        List<User> users = usersCurrentUserDoesNotHaveChatWith(currentUserId, sex);
         if (users.isEmpty()) {
             throw new NoUsersToTalkException("Упс! Похоже, вы общались уже со всеми пользователями =)");
         }

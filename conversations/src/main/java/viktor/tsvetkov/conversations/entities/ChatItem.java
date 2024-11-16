@@ -13,7 +13,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "chat_items")
 @Data
-public class UserChatItem {
+public class ChatItem {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")

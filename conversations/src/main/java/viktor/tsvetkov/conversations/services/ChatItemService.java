@@ -3,8 +3,8 @@ package viktor.tsvetkov.conversations.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import viktor.tsvetkov.conversations.dto.ChatWithInterlocutor;
-import viktor.tsvetkov.conversations.entities.UserChatItem;
-import viktor.tsvetkov.conversations.repositories.UserChatItemRepository;
+import viktor.tsvetkov.conversations.entities.ChatItem;
+import viktor.tsvetkov.conversations.repositories.ChatItemRepository;
 import static viktor.tsvetkov.conversations.utils.query.SqlQueries.INTERLOCUTOR_CHAT_LATEST_MESSAGE;
 import static viktor.tsvetkov.conversations.utils.query.SqlQueries.SEARCH_MESSAGE;
 
@@ -15,13 +15,13 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserChatItemService {
+public class ChatItemService {
 
-    private final UserChatItemRepository userChatItemRepository;
+    private final ChatItemRepository chatItemRepository;
     private final QueryService queryService;
 
-    public void save(UserChatItem userChatItem) {
-        userChatItemRepository.save(userChatItem);
+    public void save(ChatItem chatItem) {
+        chatItemRepository.save(chatItem);
     }
 
     public List<ChatWithInterlocutor> getChatsWithInterlocutor(UUID idUser, String searchParam) {

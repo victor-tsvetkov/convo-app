@@ -18,7 +18,7 @@ export const useMessagesStore = defineStore("messages", () => {
     }
 
     function loadDataMessages(idUser, searchParam) {
-        axios.get("chatItem/groupChatWithMessages", {
+        axios.get("chatItem/getChatsWithInterlocutor", {
             params: {
                 idUser,
                 searchParam
@@ -39,15 +39,20 @@ export const useMessagesStore = defineStore("messages", () => {
     }
 
     const saveMessages = async (idChat) => {
-        const loadedResult = await loadMessagesByChat(idChat, start, pageSize);
-        totalMessagesQuantity.value = loadedResult.data.totalQuantity;
-        if (isAbleToLoadMoreMessages(totalMessagesQuantity.value, currentPage.value, pageSize)) {
-            setData([...chatMessages.value, ...loadedResult.data.data]);
-            currentPage.value += 1;
-            start = currentPage.value * pageSize;
-            paginationDoneFunc.value('ok');
-        } else {
-            paginationDoneFunc.value('empty');
+        try {
+            const loadedResult = await loadMessagesByChat(idChat, start, pageSize);
+            totalMessagesQuantity.value = loadedResult.data.totalQuantity;
+            if (isAbleToLoadMoreMessages(totalMessagesQuantity.value, currentPage.value, pageSize)) {
+                setData([...chatMessages.value, ...loadedResult.data.messages]);
+                currentPage.value += 1;
+                start = currentPage.value * pageSize;
+                paginationDoneFunc.value('ok');
+            } else {
+                paginationDoneFunc.value('empty');
+            }
+        } catch (e) {
+            paginationDoneFunc.value("error");
+            console.error("Возникла ошибка: " + e);
         }
     }
 
