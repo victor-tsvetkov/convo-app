@@ -16,4 +16,5 @@ public class MessagesForChatDto {
     private UUID idUser;
     private String text;
     private String formattedDay;
+    private String userName;
 }

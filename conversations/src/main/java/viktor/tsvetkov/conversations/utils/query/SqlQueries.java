@@ -86,7 +86,7 @@ public class SqlQueries {
             "                        then to_char(m.creation_date, 'dd TMmonth yyyy')\n" +
             "                        else null\n" +
             "                    end" +
-            "       end as formattedDay" +
+            "       end as formattedDay, (select name from users u where u.id = m.id_user) as userName" +
             " " +
             "from messages m where m.id_chat = :chatId order by m.creation_date desc";
 

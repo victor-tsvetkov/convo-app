@@ -18,8 +18,8 @@ const vuetify = createVuetify({
     directives,
 });
 
-app.use(createPinia())
+app.use(createPinia());
 app.use(vuetify);
-app.use(router)
+app.use(router);
 
 app.mount('#app')

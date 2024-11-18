@@ -5,6 +5,7 @@ import {ref} from "vue";
 export const useMessagesStore = defineStore("messages", () => {
     let dataChats = ref(null);
     let chatMessages = ref([]);
+    let readMessagesIds = ref([]);
 
     let paginationDoneFunc = ref(null);
 
@@ -38,12 +39,35 @@ export const useMessagesStore = defineStore("messages", () => {
         });
     }
 
-    const saveMessages = async (idChat) => {
+    const setReadToTrue = (start, idCurrentUser) => {
+        for (let i = start; i < (start + pageSize); i++) {
+            console.log("element: ");
+            console.log(chatMessages.value[i]);
+            if (chatMessages.value[i].idUser !== idCurrentUser && !chatMessages.value[i].read) {
+                chatMessages.value[i].read = true;
+            }
+        }
+    }
+
+    const readMessages = () => {
+        return axios.patch('message/readMessages', readMessagesIds.value);
+    }
+
+    const saveMessages = async (idChat, idCurrentUser) => {
         try {
             const loadedResult = await loadMessagesByChat(idChat, start, pageSize);
             totalMessagesQuantity.value = loadedResult.data.totalQuantity;
             if (isAbleToLoadMoreMessages(totalMessagesQuantity.value, currentPage.value, pageSize)) {
                 setData([...chatMessages.value, ...loadedResult.data.messages]);
+                readMessagesIds.value = loadedResult.data.messages
+                    .filter(message => message.idUser !== idCurrentUser && !message.read)
+                    .map(message => message.id);
+                if (readMessagesIds.value.length > 0) {
+                    await readMessages();
+                    console.log('выполняется?')
+                    setReadToTrue(start, idCurrentUser);
+                    readMessagesIds.value = [];
+                }
                 currentPage.value += 1;
                 start = currentPage.value * pageSize;
                 paginationDoneFunc.value('ok');
@@ -61,11 +85,11 @@ export const useMessagesStore = defineStore("messages", () => {
         return currentPage < pagesQuantity;
     }
 
-    const sendMessage = (messageDto) => {
+    const sendMessage = (messageDto, currentIdUser) => {
         axios.put('message', messageDto)
         .then(() => {
             clearData();
-            saveMessages(messageDto.idChat);
+            saveMessages(messageDto.idChat, currentIdUser);
         })
     }
 

@@ -20,14 +20,14 @@ import {useMessagesStore} from "@/stores/messages.js";
             const messageDto = {
                 idUser, idChat, text: messageInput.value
             };
-            messagesStore.sendMessage(messageDto);
+            messagesStore.sendMessage(messageDto, idUser);
             messageInput.value = "";
         }
     }
 
     const load = ({done}) => {
         setPaginationDoneFunc(done);
-        saveMessages(idChat);
+        saveMessages(idChat, idUser);
     }
 
     onUnmounted(() => {
@@ -42,10 +42,14 @@ import {useMessagesStore} from "@/stores/messages.js";
         <v-infinite-scroll @load="load" side="end" class="messages_list">
             <template v-for="message in messages" :key="message.id">
                 <div class="message"
-                     :style="{alignSelf: idUser === message.idUser ? 'flex-end' : 'flex-start',
-                    display: 'flex', justifyContent: 'space-between'}">
-                    {{message.text}}
-                    <span class="time">{{message.creationDate}}</span>
+                     :style="{backgroundColor: !message.read ? '#F0F2F5' : 'inherit'}">
+                    <div class="message_header">
+                        <span class="message_username">{{message.userName}}</span>
+                        <span class="time">{{message.creationDate}}</span>
+                    </div>
+                    <div class="message_text">
+                        {{message.text}}
+                    </div>
                 </div>
                 <div v-if="!!message.formattedDay" style="text-align: center"
                      class="time">
@@ -67,14 +71,21 @@ import {useMessagesStore} from "@/stores/messages.js";
     }
 
     .message {
-        border: 1px solid black;
         padding: 5px;
         display: block;
         margin-top: 10px;
-        width: 210px;
-        span {
-            margin-top: 10px;
-        }
+        width: 100%;
+    }
+
+    .message_username {
+        color: #2A9DD0;
+    }
+
+    .message_header {
+        display: grid;
+        grid-template-columns: fit-content(150px) 30px;
+        align-items: center;
+        column-gap: 7px;
     }
 
     .text_area {

@@ -4,6 +4,7 @@ import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import viktor.tsvetkov.conversations.dto.MessageDto;
 import viktor.tsvetkov.conversations.dto.MessagesForChatDto;
 import viktor.tsvetkov.conversations.entities.Message;
@@ -65,6 +66,7 @@ public class MessageService {
         return result;
     }
 
+    @Transactional
     public void readMessages(@Nonnull List<UUID> idsOfMessages) {
         messageRepository.readMessages(idsOfMessages);
     }
