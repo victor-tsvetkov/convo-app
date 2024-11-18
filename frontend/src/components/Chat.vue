@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onUnmounted, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref} from "vue";
 import {useMessagesStore} from "@/stores/messages.js";
 
     const props = defineProps({
@@ -8,9 +8,11 @@ import {useMessagesStore} from "@/stores/messages.js";
     });
 
     const messagesStore = useMessagesStore();
-    const {clearData, saveMessages, setPaginationDoneFunc} = messagesStore;
+    const {clearData, saveMessages} = messagesStore;
 
     const {idUser, idChat} = props;
+
+    let scrollList = null;
 
     const messageInput = ref('');
     const messages = computed(() => messagesStore.chatMessages);
@@ -25,22 +27,29 @@ import {useMessagesStore} from "@/stores/messages.js";
         }
     }
 
-    const load = ({done}) => {
-        setPaginationDoneFunc(done);
-        saveMessages(idChat, idUser);
+    const scrollMessages = () => {
+        const percentage = (scrollList.scrollTop / (scrollList.scrollHeight - scrollList.clientHeight)) * 100;
+        if (Math.abs(percentage) >= 90) {
+            console.log('Пора подгружать новые элементы!');
+            saveMessages(idChat, idUser);
+        }
     }
+
+    onMounted(() => {
+        scrollList = document.querySelector('.messages_list');
+        saveMessages(idChat, idUser);
+    });
 
     onUnmounted(() => {
         clearData();
-        setPaginationDoneFunc(null);
     });
 
 </script>
 
 <template>
     <div class="chat">
-        <v-infinite-scroll @load="load" side="end" class="messages_list">
-            <template v-for="message in messages" :key="message.id">
+        <ul class="messages_list" @scrollend="scrollMessages">
+            <li v-for="message in messages" :key="message.id">
                 <div class="message"
                      :style="{backgroundColor: !message.read ? '#F0F2F5' : 'inherit'}">
                     <div class="message_header">
@@ -55,10 +64,8 @@ import {useMessagesStore} from "@/stores/messages.js";
                      class="time">
                     {{message.formattedDay}}
                 </div>
-            </template>
-
-            <template v-slot:empty></template>
-        </v-infinite-scroll>
+            </li>
+        </ul>
         <v-text-field class="text_area" label="Введите сообщение" v-model="messageInput"></v-text-field>
         <v-btn @click="sendMessage">Отправить</v-btn>
     </div>

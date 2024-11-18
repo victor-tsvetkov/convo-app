@@ -7,16 +7,10 @@ export const useMessagesStore = defineStore("messages", () => {
     let chatMessages = ref([]);
     let readMessagesIds = ref([]);
 
-    let paginationDoneFunc = ref(null);
-
     let totalMessagesQuantity = ref(0);
     let currentPage = ref(0);
-    const pageSize = 15;
+    const pageSize = 50;
     let start = currentPage.value * pageSize;
-
-    const setPaginationDoneFunc = (func) => {
-        paginationDoneFunc.value = func;
-    }
 
     function loadDataMessages(idUser, searchParam) {
         axios.get("chatItem/getChatsWithInterlocutor", {
@@ -41,8 +35,6 @@ export const useMessagesStore = defineStore("messages", () => {
 
     const setReadToTrue = (start, idCurrentUser) => {
         for (let i = start; i < (start + pageSize); i++) {
-            console.log("element: ");
-            console.log(chatMessages.value[i]);
             if (chatMessages.value[i].idUser !== idCurrentUser && !chatMessages.value[i].read) {
                 chatMessages.value[i].read = true;
             }
@@ -64,18 +56,13 @@ export const useMessagesStore = defineStore("messages", () => {
                     .map(message => message.id);
                 if (readMessagesIds.value.length > 0) {
                     await readMessages();
-                    console.log('выполняется?')
                     setReadToTrue(start, idCurrentUser);
                     readMessagesIds.value = [];
                 }
                 currentPage.value += 1;
                 start = currentPage.value * pageSize;
-                paginationDoneFunc.value('ok');
-            } else {
-                paginationDoneFunc.value('empty');
             }
         } catch (e) {
-            paginationDoneFunc.value("error");
             console.error("Возникла ошибка: " + e);
         }
     }
@@ -86,9 +73,9 @@ export const useMessagesStore = defineStore("messages", () => {
     }
 
     const sendMessage = (messageDto, currentIdUser) => {
+        clearData();
         axios.put('message', messageDto)
         .then(() => {
-            clearData();
             saveMessages(messageDto.idChat, currentIdUser);
         })
     }
@@ -105,6 +92,6 @@ export const useMessagesStore = defineStore("messages", () => {
 
     return {
         dataChats, loadDataMessages, chatMessages, totalMessagesQuantity,
-        clearData, setData, saveMessages, sendMessage, setPaginationDoneFunc
+        clearData, setData, saveMessages, sendMessage
     }
 });
