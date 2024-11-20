@@ -5,7 +5,6 @@ import {ref} from "vue";
 export const useMessagesStore = defineStore("messages", () => {
     let dataChats = ref(null);
     let chatMessages = ref([]);
-    let readMessagesIds = ref([]);
 
     let totalMessagesQuantity = ref(0);
     let currentPage = ref(0);
@@ -33,32 +32,12 @@ export const useMessagesStore = defineStore("messages", () => {
         });
     }
 
-    const setReadToTrue = (start, idCurrentUser) => {
-        for (let i = start; i < (start + pageSize); i++) {
-            if (chatMessages.value[i].idUser !== idCurrentUser && !chatMessages.value[i].read) {
-                chatMessages.value[i].read = true;
-            }
-        }
-    }
-
-    const readMessages = () => {
-        return axios.patch('message/readMessages', readMessagesIds.value);
-    }
-
-    const saveMessages = async (idChat, idCurrentUser) => {
+    const saveMessages = async (idChat) => {
         try {
             const loadedResult = await loadMessagesByChat(idChat, start, pageSize);
             totalMessagesQuantity.value = loadedResult.data.totalQuantity;
             if (isAbleToLoadMoreMessages(totalMessagesQuantity.value, currentPage.value, pageSize)) {
                 setData([...chatMessages.value, ...loadedResult.data.messages]);
-                readMessagesIds.value = loadedResult.data.messages
-                    .filter(message => message.idUser !== idCurrentUser && !message.read)
-                    .map(message => message.id);
-                if (readMessagesIds.value.length > 0) {
-                    await readMessages();
-                    setReadToTrue(start, idCurrentUser);
-                    readMessagesIds.value = [];
-                }
                 currentPage.value += 1;
                 start = currentPage.value * pageSize;
             }

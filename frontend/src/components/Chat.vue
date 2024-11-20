@@ -1,6 +1,7 @@
 <script setup>
 import {computed, onMounted, onUnmounted, ref} from "vue";
 import {useMessagesStore} from "@/stores/messages.js";
+import axios from "axios";
 
     const props = defineProps({
         idChat: String,
@@ -17,6 +18,8 @@ import {useMessagesStore} from "@/stores/messages.js";
     const messageInput = ref('');
     const messages = computed(() => messagesStore.chatMessages);
 
+    let idsMessagesToRead = [];
+
     const sendMessage = () => {
         if (messageInput.value.trim().length > 0) {
             const messageDto = {
@@ -30,8 +33,22 @@ import {useMessagesStore} from "@/stores/messages.js";
     const scrollMessages = () => {
         const percentage = (scrollList.scrollTop / (scrollList.scrollHeight - scrollList.clientHeight)) * 100;
         if (Math.abs(percentage) >= 90) {
-            console.log('Пора подгружать новые элементы!');
             saveMessages(idChat, idUser);
+        }
+        if (idsMessagesToRead.length > 0) {
+            for (let id of idsMessagesToRead) {
+                messages.value.filter(m => m.id === id)[0].read = true;
+            }
+            axios.patch('message/readMessages', idsMessagesToRead)
+            .then(() => idsMessagesToRead = []);
+        }
+    }
+
+    const addIdsMessagesToRead = (isVisible, entry, message) => {
+        if (isVisible) {
+            if (message.idUser !== idUser && !message.read) {
+                idsMessagesToRead.push(message.id);
+            }
         }
     }
 
@@ -50,7 +67,11 @@ import {useMessagesStore} from "@/stores/messages.js";
     <div class="chat">
         <ul class="messages_list" @scrollend="scrollMessages">
             <li v-for="message in messages" :key="message.id">
-                <div class="message"
+                <div v-if="!!message.formattedDay" style="text-align: center"
+                     class="time">
+                    {{message.formattedDay}}
+                </div>
+                <div class="message" v-observe-visibility="(isVisible, entry) => addIdsMessagesToRead(isVisible, entry, message)"
                      :style="{backgroundColor: !message.read ? '#F0F2F5' : 'inherit'}">
                     <div class="message_header">
                         <span class="message_username">{{message.userName}}</span>
@@ -59,10 +80,6 @@ import {useMessagesStore} from "@/stores/messages.js";
                     <div class="message_text">
                         {{message.text}}
                     </div>
-                </div>
-                <div v-if="!!message.formattedDay" style="text-align: center"
-                     class="time">
-                    {{message.formattedDay}}
                 </div>
             </li>
         </ul>

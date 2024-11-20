@@ -6,6 +6,8 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
+import VueObserveVisibility from 'vue3-observe-visibility';
+
 import App from './App.vue'
 import axios from "axios";
 import router from './router'
@@ -21,5 +23,6 @@ const vuetify = createVuetify({
 app.use(createPinia());
 app.use(vuetify);
 app.use(router);
+app.use(VueObserveVisibility);
 
 app.mount('#app')
