@@ -27,30 +27,34 @@
 </script>
 
 <template>
-    <div>
-        <v-card title="Чаты">
-            <div class="card-header">
-                <v-text-field @input="loadDataMessages(idUser, searchMessageValue)"
-                          v-model="searchMessageValue" clearable
-                          placeholder="Поиск"></v-text-field>
+    <el-card title="Чаты" class="chats">
+        <div slot="header" class="clearfix">
+            <span>Чаты</span>
+        </div>
+        <div class="card-header">
+            <el-input @input="loadDataMessages(idUser, searchMessageValue)"
+                      v-model="searchMessageValue" clearable
+                      placeholder="Поиск"></el-input>
+        </div>
+        <div class="chat_board">
+            <div  v-for="(item, index) in dataChats" :key="index">
+                <el-card @click="openChat(item.chatId)"  style="height: 100%;
+                padding-left: 10px; padding-right: 10px" shadow="hover">
+                    <div class="chat_appearance">
+                        <span>{{item.interlocutorName}}</span>
+                        <time class="time">{{item.messageDate}}</time>
+                    </div>
+                    <div class="message">{{item.messageText}}</div>
+                </el-card>
             </div>
-            <div class="chat_board">
-                <div  v-for="(item, index) in dataChats" :key="index">
-                    <v-card @click="openChat(item.chatId)" variant="outlined" style="height: 100%;
-                    padding-left: 10px; padding-right: 10px" shadow="hover">
-                        <div class="chat_appearance">
-                            <span>{{item.interlocutorName}}</span>
-                            <time class="time">{{item.messageDate}}</time>
-                        </div>
-                        <div class="message">{{item.messageText}}</div>
-                    </v-card>
-                </div>
-            </div>
-        </v-card>
-    </div>
+        </div>
+    </el-card>
 </template>
 
 <style>
+    .chats {
+        width: 700px;
+    }
     .chat_board {
         display: grid;
         grid-template: 80px / 100%;
