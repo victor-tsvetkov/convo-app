@@ -3,8 +3,6 @@ import {ref} from "vue";
 import {loadUserData} from "@/api/loadUserData.js";
 import axios from "axios";
 import {ElMessage} from "element-plus";
-// import {Stomp} from "@stomp/stompjs";
-// import SockJS from 'sockjs-client/dist/sockjs.js';
 
 export const useUserStore = defineStore("user", () => {
     let userData = ref({});
@@ -49,26 +47,51 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
-    // const connect = () => {
-    //     const url = "http://localhost:8080/ws";
-    //     const socket = new SockJS(url);
-    //     stompClient = Stomp.over(socket);
-    //     stompClient.connect({}, () => {
-    //         stompClient.subscribe("/topic/greetings", (response) => {
-    //             console.log("РЕЗУЛЬТАТ!:");
-    //             console.log(response.body);
-    //         });
-    //     });
-    // }
+    const connect = () => {
 
-    // const sendMessage = () => {
-    //     stompClient.send("/app/hello", {});
-    // }
+        // const socket = new WebSocket('ws://localhost:8080/messages-socket');
+        // socket.onopen = () => {
+        //     console.log("Web socket opened with WebSocket class!))")
+        //     const testEntity = {
+        //         id: 1,
+        //         description: "Тестовое описание для сокета!"
+        //     };
+        //     socket.send(JSON.stringify(testEntity));
+        // }
+        // socket.onmessage = (e) => {
+        //     console.log(`From server: ${e.data}`);
+        // }
+
+
+        // const url = "http://localhost:8080/ws/";
+        // const socket = new SockJS(url);
+        // socket.onopen = () => {
+        //     console.log("web socket opened!");
+        //
+        //     socket.send("daw");
+        // }
+        //
+        //
+        // socket.onmessage = function(e) {
+        //     console.log('message', e.data);
+        // }
+        // stompClient = Stomp.over(socket);
+        // stompClient.connect({}, () => {
+        //     stompClient.subscribe("/topic/greetings", (response) => {
+        //         console.log("РЕЗУЛЬТАТ!:");
+        //         console.log(response.body);
+        //     });
+        // });
+    }
+
+    const sendMessage = () => {
+        stompClient.send("/app/hello", {});
+    }
 
 
 
     return {
-        userData, loadUserData, idUser,
+        userData, loadUserData, idUser, connect, sendMessage,
         question, pointsLabel, oppositeGender, askQuestion
     }
 });

@@ -83,8 +83,8 @@ import axios from "axios";
                 </div>
             </li>
         </ul>
-        <v-text-field class="text_area" label="Введите сообщение" v-model="messageInput"></v-text-field>
-        <v-btn @click="sendMessage">Отправить</v-btn>
+        <el-input class="text_area" label="Введите сообщение" v-model="messageInput"></el-input>
+        <el-button @click="sendMessage">Отправить</el-button>
     </div>
 </template>
 

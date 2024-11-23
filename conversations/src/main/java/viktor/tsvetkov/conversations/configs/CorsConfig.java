@@ -24,7 +24,7 @@ public class CorsConfig {
                         .requestMatchers("/chat/**").permitAll()
                         .requestMatchers("/message/**").permitAll()
                         .requestMatchers("/question/**").permitAll()
-                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/messages-socket/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/chatItem/**").permitAll()
                         .anyRequest().authenticated())

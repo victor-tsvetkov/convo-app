@@ -16,13 +16,13 @@
 
     onMounted(() => {
         userStore.loadUserData(idUser);
-        // store.connect();
+        userStore.connect();
     });
 
 </script>
 
 <template>
-    <v-card style="width: 800px;" class="common-layout">
+    <el-card style="width: 800px;" class="common-layout">
         <el-header>
             <div>{{userData.name}}</div>
             <div>{{pointsLabel}}: {{userData.points}}</div>
@@ -41,7 +41,7 @@
                 </div>
             </div>
         </el-main>
-    </v-card>
+    </el-card>
 </template>
 
 <style scoped>

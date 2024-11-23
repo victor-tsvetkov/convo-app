@@ -1,10 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
-import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
+import ElementPlus from "element-plus";
+import "element-plus/theme-chalk/index.css";
 
 import VueObserveVisibility from 'vue3-observe-visibility';
 
@@ -15,14 +12,10 @@ import router from './router'
 axios.defaults.baseURL = "http://localhost:8080";
 
 const app = createApp(App)
-const vuetify = createVuetify({
-    components,
-    directives,
-});
 
 app.use(createPinia());
-app.use(vuetify);
 app.use(router);
 app.use(VueObserveVisibility);
+app.use(ElementPlus);
 
 app.mount('#app')
