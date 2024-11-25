@@ -51,6 +51,7 @@ export const useAuthenticationStore = defineStore("authentication", () => {
         localStorage.setItem("token", null);
         idUser = null;
         token = null;
+        router.push({path: '/'});
     }
 
     const registerFormData = [

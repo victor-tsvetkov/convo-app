@@ -14,7 +14,7 @@
         <el-aside width="400px">
             <el-row class="tac">
                 <el-col :span="15">
-                    <el-menu
+                    <el-menu v-if="!!idUser"
                         class="el-menu-vertical-demo">
                         <el-menu-item>
                             <router-link class="el-menu-item" to="/user">
