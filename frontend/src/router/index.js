@@ -25,7 +25,7 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/chats/messages/:idUser/:idChat',
+      path: '/chats/messages/:idUser/:idChat/:idInterloc',
       component: Chat,
       props: true
     }

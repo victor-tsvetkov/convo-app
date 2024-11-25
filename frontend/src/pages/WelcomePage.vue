@@ -9,9 +9,8 @@
     let registerMode = true;
 
     const formComponentToggle = () => {
-        console.log("click!");
         registerMode = !registerMode;
-        formData.value = registerMode ? authenticationStore.signInData : authenticationStore.registerData;
+        formData.value = registerMode ? authenticationStore.registerData : authenticationStore.signInData;
     }
 
     const router = useRouter();

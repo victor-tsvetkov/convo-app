@@ -5,13 +5,14 @@ import axios from "axios";
 
     const props = defineProps({
         idChat: String,
-        idUser: String
+        idUser: String,
+        idInterloc: String
     });
 
     const messagesStore = useMessagesStore();
     const {clearData, saveMessages} = messagesStore;
 
-    const {idUser, idChat} = props;
+    const {idUser, idChat, idInterloc} = props;
 
     let scrollList = null;
 
@@ -25,7 +26,7 @@ import axios from "axios";
             const messageDto = {
                 idUser, idChat, text: messageInput.value
             };
-            messagesStore.sendMessage(messageDto, idUser);
+            messagesStore.sendMessage(messageDto, idUser, idInterloc);
             messageInput.value = "";
         }
     }

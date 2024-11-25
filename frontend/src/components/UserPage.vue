@@ -1,9 +1,11 @@
 <script setup>
     import {useUserStore} from "@/stores/user.js";
     import {storeToRefs} from "pinia";
-    import {onMounted} from "vue";
+    import {onMounted, onBeforeUnmount} from "vue";
+    import {useWebSocketStore} from "@/stores/websocket.js";
 
     const userStore = useUserStore();
+    const websocketStore = useWebSocketStore();
     const {userData, question, pointsLabel, oppositeGender} = storeToRefs(userStore);
     const {askQuestion, idUser} = userStore;
 
@@ -16,7 +18,12 @@
 
     onMounted(() => {
         userStore.loadUserData(idUser);
-        userStore.connect();
+        websocketStore.connect(idUser);
+    });
+
+    onBeforeUnmount(() => {
+        console.log("before unmounting")
+        // websocketStore.closeConnection();
     });
 
 </script>

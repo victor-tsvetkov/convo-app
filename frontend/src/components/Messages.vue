@@ -20,8 +20,8 @@
         loadDataMessages(idUser, searchMessageValue.value);
     });
 
-    const openChat = (idChat) => {
-        router.push({path: `/chats/messages/${idUser}/${idChat}`});
+    const openChat = (idChat, idInterloc) => {
+        router.push({path: `/chats/messages/${idUser}/${idChat}/${idInterloc}`});
     }
 
 </script>
@@ -38,7 +38,7 @@
         </div>
         <div class="chat_board">
             <div  v-for="(item, index) in dataChats" :key="index">
-                <el-card @click="openChat(item.chatId)"  style="height: 100%;
+                <el-card @click="openChat(item.chatId, item.interlocutorId)"  style="height: 100%;
                 padding-left: 10px; padding-right: 10px" shadow="hover">
                     <div class="chat_appearance">
                         <span>{{item.interlocutorName}}</span>

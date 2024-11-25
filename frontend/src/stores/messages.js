@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import axios from "axios";
 import {ref} from "vue";
+import {useWebSocketStore} from "@/stores/websocket.js";
 
 export const useMessagesStore = defineStore("messages", () => {
     let dataChats = ref(null);
@@ -10,6 +11,8 @@ export const useMessagesStore = defineStore("messages", () => {
     let currentPage = ref(0);
     const pageSize = 50;
     let start = currentPage.value * pageSize;
+
+    const socketStore = useWebSocketStore();
 
     function loadDataMessages(idUser, searchParam) {
         axios.get("chatItem/getChatsWithInterlocutor", {
@@ -51,10 +54,11 @@ export const useMessagesStore = defineStore("messages", () => {
         return currentPage < pagesQuantity;
     }
 
-    const sendMessage = (messageDto, currentIdUser) => {
+    const sendMessage = (messageDto, currentIdUser, idInterloc) => {
         clearData();
         axios.put('message', messageDto)
         .then(() => {
+            socketStore.sendMessage(messageDto, idInterloc)
             saveMessages(messageDto.idChat, currentIdUser);
         })
     }
