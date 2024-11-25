@@ -3,6 +3,7 @@
     import {storeToRefs} from "pinia";
     import {onMounted, ref} from "vue";
     import {useRouter} from "vue-router";
+    import {useWebSocketStore} from "@/stores/websocket.js";
 
     const router = useRouter();
 
@@ -11,6 +12,7 @@
     });
     const {idUser} = props;
     const store = useMessagesStore();
+    const websocketStore = useWebSocketStore();
     const {dataChats} = storeToRefs(store);
     const {loadDataMessages} = store;
 
@@ -18,6 +20,7 @@
 
     onMounted(() => {
         loadDataMessages(idUser, searchMessageValue.value);
+        websocketStore.connect(idUser);
     });
 
     const openChat = (idChat, idInterloc) => {

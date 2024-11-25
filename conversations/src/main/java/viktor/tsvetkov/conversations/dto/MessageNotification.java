@@ -2,8 +2,9 @@ package viktor.tsvetkov.conversations.dto;
 
 import java.util.UUID;
 
-public record MessageWithInterlocutor(
-        MessageDto messageDto,
+public record MessageNotification(
+        String messageText,
+        String senderName,
         UUID idInterloc
 ) {
 }

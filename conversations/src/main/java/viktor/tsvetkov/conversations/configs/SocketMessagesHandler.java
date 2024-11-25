@@ -6,7 +6,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import viktor.tsvetkov.conversations.dto.MessageWithInterlocutor;
+import viktor.tsvetkov.conversations.dto.MessageNotification;
 import viktor.tsvetkov.conversations.utils.JsonUtils;
 
 import java.util.List;
@@ -20,14 +20,14 @@ public class SocketMessagesHandler extends TextWebSocketHandler {
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-        MessageWithInterlocutor messageWithInterlocutor = jsonUtils.parseObject((String) message.getPayload(),
-                MessageWithInterlocutor.class);
+        MessageNotification messageNotification = jsonUtils.parseObject((String) message.getPayload(),
+                MessageNotification.class);
         WebSocketSession sess = sessions.stream().
                 filter(s -> s.getAttributes().get("idUser")
-                        .equals(messageWithInterlocutor.idInterloc())).findFirst()
+                        .equals(messageNotification.idInterloc())).findFirst()
                 .orElse(null);
         if (sess != null) {
-            sess.sendMessage(new TextMessage(messageWithInterlocutor.messageDto().text()));
+            sess.sendMessage(new TextMessage(jsonUtils.toJson(messageNotification)));
         }
     }
 

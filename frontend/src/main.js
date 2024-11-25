@@ -7,7 +7,9 @@ import VueObserveVisibility from 'vue3-observe-visibility';
 
 import App from './App.vue'
 import axios from "axios";
-import router from './router'
+import router from './router';
+
+import './styles/style.css';
 
 axios.defaults.baseURL = "http://localhost:8080";
 
