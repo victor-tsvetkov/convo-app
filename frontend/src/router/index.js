@@ -9,18 +9,18 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'Страница регистрации/аутентификации',
+      name: 'Home',
       component: WelcomePage
     },
 
     {
       path: '/user',
-      name: 'Моя страница',
+      name: 'My page',
       component: UserPage
     },
     {
-      path: '/chats/:idUser',
-      name: 'Мои чаты',
+      path: '/chats/',
+      name: 'My chats',
       component: Messages,
       props: true
     },

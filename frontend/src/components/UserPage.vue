@@ -25,7 +25,7 @@
     }
 
     onMounted(() => {
-        userStore.loadUserData(idUser);
+        userStore.loadUser();
         websocketStore.connect(idUser);
     });
 

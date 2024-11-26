@@ -1,24 +1,30 @@
 import {defineStore} from "pinia";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {loadUserData} from "@/api/loadUserData.js";
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import {useAuthenticationStore} from "@/stores/authentication.js";
 
 export const useUserStore = defineStore("user", () => {
+
+    const authStore = useAuthenticationStore();
+
     let userData = ref({});
     const pointsLabel = ref("Ваши баллы");
-    const idUser = localStorage.getItem("idUser");
+    let idUser = computed(() => authStore.idUser);
 
-    if (!!idUser) {
-        loadUserData(idUser)
-        .then(result => {
-            userData.value = {
-                name: result.data.name,
-                id: result.data.id,
-                sex: result.data.sex,
-                points: result.data.points
-            };
-        }).catch(e => console.error(e));
+    const loadUser = () => {
+        if (!!idUser.value) {
+            loadUserData(idUser.value)
+            .then(result => {
+                userData.value = {
+                    name: result.data.name,
+                    id: result.data.id,
+                    sex: result.data.sex,
+                    points: result.data.points
+                };
+            }).catch(e => console.error(e));
+        }
     }
 
     const question = ref("");
@@ -49,7 +55,7 @@ export const useUserStore = defineStore("user", () => {
     }
 
     return {
-        userData, loadUserData, idUser,
+        userData, loadUser, idUser,
         question, pointsLabel, oppositeGender, askQuestion
     }
 });

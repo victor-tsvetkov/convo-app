@@ -1,10 +1,11 @@
 import {defineStore} from "pinia";
 import axios from "axios";
 import {useRouter} from "vue-router";
+import {ref} from "vue";
 
 export const useAuthenticationStore = defineStore("authentication", () => {
 
-    let idUser = localStorage.getItem("idUser") !== null ? localStorage.getItem("idUser") : null;
+    let idUser = ref(localStorage.getItem("idUser") !== null ? localStorage.getItem("idUser") : null);
     let token = localStorage.getItem("token") !== null ? localStorage.getItem("token") : null;
     const router = useRouter();
 
@@ -20,9 +21,9 @@ export const useAuthenticationStore = defineStore("authentication", () => {
                 if (result.status === 200) {
                     localStorage.setItem("idUser", result.data.user.id);
                     localStorage.setItem("token", result.data.token);
-                    idUser = result.data.user.id;
+                    idUser.value = result.data.user.id;
                     token = result.data.token;
-                    console.log("User with id " + idUser + " successfully signed up");
+                    console.log("User with id " + idUser.value + " successfully signed up");
                 }
             })
         }
@@ -37,21 +38,21 @@ export const useAuthenticationStore = defineStore("authentication", () => {
                 if (result.status === 200) {
                     localStorage.setItem("idUser", result.data.user.id);
                     localStorage.setItem("token", result.data.token);
-                    idUser = result.data.user.id;
+                    idUser.value = result.data.user.id;
                     token = result.data.token;
                     router.push({path: '/user'});
-                    console.log("User with id " + idUser + " successfully logged in");
+                    console.log("User with id " + idUser.value + " successfully logged in");
                 }
             })
         }
     }
 
     const logOut = () => {
-        localStorage.setItem("idUser", null);
-        localStorage.setItem("token", null);
-        idUser = null;
+        localStorage.removeItem("idUser");
+        localStorage.removeItem("token");
+        idUser.value = null;
         token = null;
-        router.push({path: '/'});
+        router.push({name: 'Home'})
     }
 
     const registerFormData = [

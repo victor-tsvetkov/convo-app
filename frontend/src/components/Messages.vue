@@ -1,16 +1,15 @@
 <script setup>
     import {useMessagesStore} from "@/stores/messages.js";
     import {storeToRefs} from "pinia";
-    import {onMounted, ref} from "vue";
+    import {computed, onMounted, reactive, ref} from "vue";
     import {useRouter} from "vue-router";
     import {useWebSocketStore} from "@/stores/websocket.js";
+    import {useUserStore} from "@/stores/user.js";
 
     const router = useRouter();
+    const userStore = useUserStore();
 
-    const props = defineProps({
-        idUser: String
-    });
-    const {idUser} = props;
+    let idUser = computed(() => userStore.idUser);
     const store = useMessagesStore();
     const websocketStore = useWebSocketStore();
     const {dataChats} = storeToRefs(store);
@@ -19,8 +18,9 @@
     let searchMessageValue = ref('');
 
     onMounted(() => {
-        loadDataMessages(idUser, searchMessageValue.value);
-        websocketStore.connect(idUser);
+        console.log(idUser.value)
+        loadDataMessages(idUser.value, searchMessageValue.value);
+        websocketStore.connect(idUser.value);
     });
 
     const openChat = (idChat, idInterloc) => {

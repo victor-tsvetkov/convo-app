@@ -1,11 +1,12 @@
 <script setup>
 
     import {useUserStore} from "@/stores/user.js";
+    import {computed} from "vue";
 
     const userStore = useUserStore();
-    const idUser = userStore.idUser;
+    const idUser = computed(() => userStore.idUser);
 
-    const chatPath = `/chats/${idUser}`;
+    const chatPath = `/chats/`;
 
 </script>
 

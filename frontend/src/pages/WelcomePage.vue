@@ -7,10 +7,18 @@
     const authenticationStore = useAuthenticationStore();
     let formData = ref(authenticationStore.registerData);
     let registerMode = true;
+    const alreadyHaveAccount = "Уже есть аккаунт?";
+    const notHaveAccountYet = "Нет аккаунта?";
+    const logInBtn = "Войти";
+    const registerBtn = "Зарегистрируйтесь";
+    let text = alreadyHaveAccount;
+    let actionBtn = logInBtn;
 
     const formComponentToggle = () => {
         registerMode = !registerMode;
         formData.value = registerMode ? authenticationStore.registerData : authenticationStore.signInData;
+        text = registerMode ? alreadyHaveAccount : notHaveAccountYet;
+        actionBtn = registerMode ? logInBtn : registerBtn;
     }
 
     const router = useRouter();
@@ -24,7 +32,7 @@
 <template>
     <el-card shadow="always" class="welcome_page">
         <FormComponent :data="formData"></FormComponent>
-        <div>Уже есть аккаунт? <span @click="formComponentToggle">Войти</span></div>
+        <div>{{text}} <span class="actionBtn" @click="formComponentToggle">{{actionBtn}}</span></div>
     </el-card>
 </template>
 
@@ -34,5 +42,12 @@
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
+    }
+    .actionBtn {
+        color: #409EFF;
+        cursor: pointer;
+    }
+    .actionBtn:hover {
+        text-decoration: underline;
     }
 </style>
