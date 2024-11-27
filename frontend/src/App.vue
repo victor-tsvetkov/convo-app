@@ -13,32 +13,32 @@
 </script>
 
 <template>
-    <el-container style="height:800px">
-        <el-aside width="400px">
-            <el-row class="tac">
-                <el-col :span="15">
-                    <el-menu v-if="!!idUser"
-                        class="el-menu-vertical-demo">
-                        <el-menu-item>
-                            <router-link class="el-menu-item" to="/user">
-                                Моя страница
-                            </router-link>
-                        </el-menu-item>
-                        <el-menu-item>
-                            <router-link class="el-menu-item" :to="chatPath">
-                                Мои чаты <span> <el-badge type="primary" :value="messagesStore.unreadMessagesQuantity"/></span>
-                            </router-link>
-                        </el-menu-item>
-                    </el-menu>
-                </el-col>
-            </el-row>
-        </el-aside>
+    <div class="container">
+        <el-menu v-if="!!idUser"
+                 class="el-menu-vertical-demo">
+            <el-menu-item>
+                <router-link class="el-menu-item" to="/user">
+                    Моя страница
+                </router-link>
+            </el-menu-item>
+            <el-menu-item>
+                <router-link class="el-menu-item" :to="chatPath">
+                    Мои чаты <span> <el-badge type="primary" :value="messagesStore.unreadMessagesQuantity"/></span>
+                </router-link>
+            </el-menu-item>
+        </el-menu>
         <router-view></router-view>
-    </el-container>
+    </div>
 </template>
 
 <style>
     .el-menu-item * {
         vertical-align: unset;
+    }
+
+    .container {
+        display: grid;
+        grid-template: minmax(600px, 800px) / 200px 850px;
+        column-gap: 20px;
     }
 </style>

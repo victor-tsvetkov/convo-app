@@ -17,8 +17,7 @@
     const askQuestionLabel = "Задайте вопрос случайному человеку";
     const askQuestionPlaceholder = "Задайте вопрос";
     const oppositeGenderLabel = "Противоположный пол";
-    const toolTipText = "При активной галочке вопрос со 100% вероятностью отправится представителю " +
-        "противоположного пола, но израсходует 30 баллов вместо 10-ти";
+    const toolTipText = "Вопрос противоположному полу будет стоить 30 баллов";
     const askQuestionButton = "Задать вопрос";
     const logOutBtn = "Выйти";
 
@@ -33,14 +32,13 @@
     });
 
     onBeforeUnmount(() => {
-        console.log("before unmounting")
         // websocketStore.closeConnection();
     });
 
 </script>
 
 <template>
-    <el-card style="width: 800px;" class="common-layout">
+    <el-card class="common-layout">
         <el-header class="user_header">
             <div>
                 <div>{{userData.name}}</div>
@@ -53,7 +51,7 @@
                 <span>{{askQuestionLabel}}</span>
                 <div>
                     <el-input clearable v-model="question" :placeholder="askQuestionPlaceholder"></el-input>
-                    <el-tooltip :content="toolTipText" placement="bottom-end">
+                    <el-tooltip :content="toolTipText" placement="bottom-start">
                         <el-checkbox :label="oppositeGenderLabel" v-model="oppositeGender"></el-checkbox>
                     </el-tooltip>
                     <el-button style="float: right; margin-top: 10px"
