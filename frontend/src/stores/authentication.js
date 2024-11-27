@@ -7,6 +7,7 @@ export const useAuthenticationStore = defineStore("authentication", () => {
 
     let idUser = ref(localStorage.getItem("idUser") !== null ? localStorage.getItem("idUser") : null);
     let token = localStorage.getItem("token") !== null ? localStorage.getItem("token") : null;
+    let userName = ref(localStorage.getItem("userName") !== null ? localStorage.getItem("userName") : null);
     const router = useRouter();
 
     const signUp = () => {
@@ -21,8 +22,11 @@ export const useAuthenticationStore = defineStore("authentication", () => {
                 if (result.status === 200) {
                     localStorage.setItem("idUser", result.data.user.id);
                     localStorage.setItem("token", result.data.token);
+                    localStorage.setItem("userName", result.data.user.name);
                     idUser.value = result.data.user.id;
+                    userName.value = result.data.user.name;
                     token = result.data.token;
+                    router.push({path: '/user'});
                     console.log("User with id " + idUser.value + " successfully signed up");
                 }
             })
@@ -38,7 +42,9 @@ export const useAuthenticationStore = defineStore("authentication", () => {
                 if (result.status === 200) {
                     localStorage.setItem("idUser", result.data.user.id);
                     localStorage.setItem("token", result.data.token);
+                    localStorage.setItem("userName", result.data.user.name);
                     idUser.value = result.data.user.id;
+                    userName.value = result.data.user.name;
                     token = result.data.token;
                     router.push({path: '/user'});
                     console.log("User with id " + idUser.value + " successfully logged in");
@@ -112,7 +118,7 @@ export const useAuthenticationStore = defineStore("authentication", () => {
     };
 
     return {
-        idUser, token, logOut, registerData, signInData
+        idUser, token, logOut, registerData, signInData, userName
     }
 
 });

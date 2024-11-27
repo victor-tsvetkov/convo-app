@@ -24,7 +24,7 @@
     });
 
     const openChat = (idChat, idInterloc) => {
-        router.push({path: `/chats/messages/${idUser}/${idChat}/${idInterloc}`});
+        router.push({path: `/chats/messages/${idUser.value}/${idChat}/${idInterloc}`});
     }
 
 </script>

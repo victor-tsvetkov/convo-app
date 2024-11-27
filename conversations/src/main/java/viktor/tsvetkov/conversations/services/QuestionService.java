@@ -47,8 +47,8 @@ public class QuestionService {
         chatItemOfCurrentUser.setUserId(currentUser.getId());
         ChatItem chatItemOfRandomUser = new ChatItem();
         chatItemOfRandomUser.setChatId(chat.getId());
-        chatItemOfCurrentUser.setUserId(randomUser.getId());
+        chatItemOfRandomUser.setUserId(randomUser.getId());
         chatItemService.save(chatItemOfCurrentUser);
-        chatItemService.save(chatItemOfCurrentUser);
+        chatItemService.save(chatItemOfRandomUser);
     }
 }

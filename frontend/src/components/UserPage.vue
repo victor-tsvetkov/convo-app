@@ -31,7 +31,7 @@
 
     onBeforeUnmount(() => {
         console.log("before unmounting")
-        websocketStore.closeConnection();
+        // websocketStore.closeConnection();
     });
 
 </script>

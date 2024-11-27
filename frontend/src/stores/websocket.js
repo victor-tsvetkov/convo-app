@@ -1,11 +1,13 @@
 import {defineStore} from "pinia";
 import { ElNotification } from 'element-plus';
-import {useUserStore} from "@/stores/user.js";
+import {computed} from "vue";
+import {useAuthenticationStore} from "@/stores/authentication.js";
 
 export const useWebSocketStore = defineStore("websocket", () => {
 
     const baseWebSocketUrl = "ws://localhost:8080/messages-socket/";
-    const userStore = useUserStore();
+    const authStore = useAuthenticationStore();
+    let userName = computed(() => authStore.userName);
 
     let websocket = null;
 
@@ -31,9 +33,10 @@ export const useWebSocketStore = defineStore("websocket", () => {
     const sendMessage = (messageDto, idInterloc) => {
         const messageNotification = {
             messageText: messageDto.text,
-            senderName: userStore.userData.name,
+            senderName: userName.value,
             idInterloc
         };
+        console.log(messageNotification.senderName)
         websocket.send(JSON.stringify(messageNotification));
     }
 

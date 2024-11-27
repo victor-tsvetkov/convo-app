@@ -4,9 +4,9 @@ public class SqlQueries {
     public static final String USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH = """
             select u.* from users u
             where u.id not in (
-                select users.id from users join users_chats uc
-                                on users.id = uc.user_id
-                                join chats c on uc.chat_id = c.id
+                select users.id from users join chat_items ci
+                                on users.id = ci.user_id
+                                join chats c on ci.chat_id = c.id
             ) and u.id != :currentUserId""";
 
     public static final String BY_SEX = " and u.sex = :sex";

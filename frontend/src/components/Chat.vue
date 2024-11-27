@@ -2,6 +2,7 @@
 import {computed, onMounted, onUnmounted, ref} from "vue";
 import {useMessagesStore} from "@/stores/messages.js";
 import axios from "axios";
+import {useWebSocketStore} from "@/stores/websocket.js";
 
     const props = defineProps({
         idChat: String,
@@ -10,6 +11,7 @@ import axios from "axios";
     });
 
     const messagesStore = useMessagesStore();
+    const websocketStore = useWebSocketStore();
     const {clearData, saveMessages} = messagesStore;
 
     const {idUser, idChat, idInterloc} = props;
@@ -56,6 +58,7 @@ import axios from "axios";
     onMounted(() => {
         scrollList = document.querySelector('.messages_list');
         saveMessages(idChat, idUser);
+        websocketStore.connect(idUser);
     });
 
     onUnmounted(() => {

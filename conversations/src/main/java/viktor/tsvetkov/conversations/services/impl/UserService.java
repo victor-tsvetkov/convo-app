@@ -60,7 +60,7 @@ public class UserService {
     }
 
     public User getRandomUser(List<User> users) {
-        return users.get(getRandomInt(0, users.size())-1);
+        return users.get(getRandomInt(0, users.size() - 1));
     }
 
     public List<User> usersCurrentUserDoesNotHaveChatWith(UUID currentUserId, @Nullable Sex sex) {
