@@ -4,6 +4,7 @@
     import {onMounted, onBeforeUnmount} from "vue";
     import {useWebSocketStore} from "@/stores/websocket.js";
     import {useAuthenticationStore} from "@/stores/authentication.js";
+    import {useMessagesStore} from "@/stores/messages.js";
 
     const userStore = useUserStore();
     const websocketStore = useWebSocketStore();
@@ -11,6 +12,7 @@
     const {askQuestion, idUser} = userStore;
 
     const authenticationStore = useAuthenticationStore();
+    const messageStore = useMessagesStore();
 
     const askQuestionLabel = "Задайте вопрос случайному человеку";
     const askQuestionPlaceholder = "Задайте вопрос";
@@ -26,6 +28,7 @@
 
     onMounted(() => {
         userStore.loadUser();
+        messageStore.loadDataMessages(idUser, "");
         websocketStore.connect(idUser);
     });
 

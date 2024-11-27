@@ -2,8 +2,10 @@
 
     import {useUserStore} from "@/stores/user.js";
     import {computed} from "vue";
+    import {useMessagesStore} from "@/stores/messages.js";
 
     const userStore = useUserStore();
+    const messagesStore = useMessagesStore();
     const idUser = computed(() => userStore.idUser);
 
     const chatPath = `/chats/`;
@@ -24,7 +26,7 @@
                         </el-menu-item>
                         <el-menu-item>
                             <router-link class="el-menu-item" :to="chatPath">
-                                Мои чаты
+                                Мои чаты <span> <el-badge type="primary" :value="messagesStore.unreadMessagesQuantity"/></span>
                             </router-link>
                         </el-menu-item>
                     </el-menu>
@@ -36,5 +38,7 @@
 </template>
 
 <style>
-
+    .el-menu-item * {
+        vertical-align: unset;
+    }
 </style>

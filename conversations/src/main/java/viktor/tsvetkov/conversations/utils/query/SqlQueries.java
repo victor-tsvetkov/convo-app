@@ -35,7 +35,7 @@ public class SqlQueries {
                                when extract(years from age(m.creation_date)) >= 1
                                    then to_char(m.creation_date, 'dd.MM.yyyy')
                             end as messageDate,
-                            m.text as messageText from c_w_i c, messages m """;
+                            m.text as messageText, m.is_read as read, m.id_user as sender from c_w_i c, messages m """;
 
     private static final String CONDITION_LATEST_MESSAGE = """
              where chat_id = m.id_chat and m.creation_date = (select max(creation_date) from messages where messages.id_chat = c.chat_id)

@@ -13,7 +13,7 @@
     const store = useMessagesStore();
     const websocketStore = useWebSocketStore();
     const {dataChats} = storeToRefs(store);
-    const {loadDataMessages} = store;
+    const {loadDataMessages, noChatsText} = store;
 
     let searchMessageValue = ref('');
 
@@ -31,26 +31,29 @@
 
 <template>
     <el-card title="Чаты" class="chats">
-        <div slot="header" class="clearfix">
-            <span>Чаты</span>
-        </div>
-        <div class="card-header">
-            <el-input @input="loadDataMessages(idUser, searchMessageValue)"
-                      v-model="searchMessageValue" clearable
-                      placeholder="Поиск"></el-input>
-        </div>
-        <div class="chat_board">
-            <div  v-for="(item, index) in dataChats" :key="index">
-                <el-card @click="openChat(item.chatId, item.interlocutorId)"  style="height: 100%;
+        <div v-if="dataChats.length > 0">
+            <div slot="header" class="clearfix">
+                <span>Чаты</span>
+            </div>
+            <div class="card-header">
+                <el-input @input="loadDataMessages(idUser, searchMessageValue)"
+                          v-model="searchMessageValue" clearable
+                          placeholder="Поиск"></el-input>
+            </div>
+            <div class="chat_board">
+                <div v-for="(item, index) in dataChats" :key="index">
+                    <el-card @click="openChat(item.chatId, item.interlocutorId)"  style="height: 100%;
                 padding-left: 10px; padding-right: 10px" shadow="hover">
-                    <div class="chat_appearance">
-                        <span>{{item.interlocutorName}}</span>
-                        <time class="time">{{item.messageDate}}</time>
-                    </div>
-                    <div class="message">{{item.messageText}}</div>
-                </el-card>
+                        <div class="chat_appearance">
+                            <span>{{item.interlocutorName}}</span>
+                            <time class="time">{{item.messageDate}}</time>
+                        </div>
+                        <div class="message">{{item.messageText}}</div>
+                    </el-card>
+                </div>
             </div>
         </div>
+        <el-empty v-else :description="noChatsText"></el-empty>
     </el-card>
 </template>
 

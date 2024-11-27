@@ -1,16 +1,24 @@
 import {defineStore} from "pinia";
 import axios from "axios";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {useWebSocketStore} from "@/stores/websocket.js";
+import {useUserStore} from "@/stores/user.js";
 
 export const useMessagesStore = defineStore("messages", () => {
-    let dataChats = ref(null);
+    let dataChats = ref([]);
     let chatMessages = ref([]);
+
+    const userStore = useUserStore();
+    let idUser = computed(() => userStore.idUser);
+
+    let unreadMessagesQuantity = computed(() => dataChats.value
+        .filter(c => !c.read && c.sender !== idUser.value).length);
 
     let totalMessagesQuantity = ref(0);
     let currentPage = ref(0);
     const pageSize = 50;
     let start = currentPage.value * pageSize;
+    const noChatsText = "У вас пока нет чатов. Начните общение, задав вопрос случайному пользователю!"
 
     const socketStore = useWebSocketStore();
 
@@ -22,6 +30,7 @@ export const useMessagesStore = defineStore("messages", () => {
             }
         }).then(result => {
             dataChats.value = result.data;
+            console.log(result.data)
         }).catch(e => console.error(e));
     }
 
@@ -75,6 +84,6 @@ export const useMessagesStore = defineStore("messages", () => {
 
     return {
         dataChats, loadDataMessages, chatMessages, totalMessagesQuantity,
-        clearData, setData, saveMessages, sendMessage
+        clearData, setData, saveMessages, sendMessage, unreadMessagesQuantity, noChatsText
     }
 });
