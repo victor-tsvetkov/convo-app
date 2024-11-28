@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import viktor.tsvetkov.conversations.dto.FileDto;
 
+import static viktor.tsvetkov.conversations.utils.Constants.FILE_PATH;
+
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 
@@ -20,7 +22,7 @@ public class FileIOService {
             try {
                 byte[] bytes = multipartFile.getBytes();
                 String filename = fileDto.filename();
-                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(filename));
+                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(FILE_PATH + filename));
                 stream.write(bytes);
                 stream.close();
                 fileEntityService.save(fileDto);

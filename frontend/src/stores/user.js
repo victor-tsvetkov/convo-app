@@ -28,7 +28,11 @@ export const useUserStore = defineStore("user", () => {
     }
 
     const uploadFile = (fileDto) => {
-        axios.post('file', fileDto)
+        axios.post('file', fileDto, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
         .then();
     }
 
