@@ -1,7 +1,7 @@
 <script setup>
     import {useUserStore} from "@/stores/user.js";
     import {storeToRefs} from "pinia";
-    import {onMounted, onBeforeUnmount} from "vue";
+    import {computed, onMounted} from "vue";
     import {useWebSocketStore} from "@/stores/websocket.js";
     import {useAuthenticationStore} from "@/stores/authentication.js";
     import {useMessagesStore} from "@/stores/messages.js";
@@ -20,6 +20,8 @@
     const toolTipText = "Вопрос противоположному полу будет стоить 30 баллов";
     const askQuestionButton = "Задать вопрос";
     const logOutBtn = "Выйти";
+
+    let fileList = computed(() => userStore.fileList);
 
     const logOut = () => {
         authenticationStore.logOut();
@@ -40,10 +42,6 @@
         };
         userStore.uploadFile(fileDto);
     }
-
-    onBeforeUnmount(() => {
-        // websocketStore.closeConnection();
-    });
 
 </script>
 
@@ -74,7 +72,9 @@
                     <span>Фотографии</span>
                 </div>
                 <div class="photo_block">
-
+                    <div v-for="file in fileList" :key="file.id">
+                        <img :src="file.filepath" alt="image">
+                    </div>
                 </div>
             </el-card>
             <el-upload

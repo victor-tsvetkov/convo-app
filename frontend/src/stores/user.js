@@ -12,6 +12,7 @@ export const useUserStore = defineStore("user", () => {
     let userData = ref({});
     const pointsLabel = ref("Ваши баллы");
     let idUser = computed(() => authStore.idUser);
+    let fileList = ref([]);
 
     const loadUser = () => {
         if (!!idUser.value) {
@@ -23,6 +24,7 @@ export const useUserStore = defineStore("user", () => {
                     sex: result.data.sex,
                     points: result.data.points
                 };
+                loadFiles();
             }).catch(e => console.error(e));
         }
     }
@@ -33,7 +35,21 @@ export const useUserStore = defineStore("user", () => {
                 'Content-Type': 'multipart/form-data'
             }
         })
-        .then();
+        .then(() => {
+            loadFiles();
+        });
+    }
+
+    const loadFiles = () => {
+        axios.get('file', {
+            params: {
+                idUser: idUser.value
+            }
+        })
+        .then(result => {
+            fileList.value = result.data;
+            console.log(fileList.value)
+        });
     }
 
     const question = ref("");
@@ -64,7 +80,7 @@ export const useUserStore = defineStore("user", () => {
     }
 
     return {
-        userData, loadUser, idUser, uploadFile,
-        question, pointsLabel, oppositeGender, askQuestion
+        userData, loadUser, idUser, uploadFile, fileList,
+        question, pointsLabel, oppositeGender, askQuestion, loadFiles
     }
 });

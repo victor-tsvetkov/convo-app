@@ -91,4 +91,7 @@ public class SqlQueries {
             "from messages m where m.id_chat = :chatId order by m.creation_date desc";
 
     public static final String MESSAGES_QUANTITY_IN_CHAT = "select count(*) from messages where id_chat = :chatId";
+
+    public static final String FILES_OF_USER = "select id, filepath from files where id_user = :idUser \n" +
+            "order by creation_date desc";
 }

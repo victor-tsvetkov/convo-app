@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import viktor.tsvetkov.conversations.dto.FileDto;
 
-import static viktor.tsvetkov.conversations.utils.Constants.FILE_PATH;
+import static viktor.tsvetkov.conversations.utils.Constants.FilesUrl.FILE_PATH;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
