@@ -27,6 +27,11 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    const uploadFile = (fileDto) => {
+        axios.post('file', fileDto)
+        .then();
+    }
+
     const question = ref("");
 
     const oppositeGender = ref(false);
@@ -55,7 +60,7 @@ export const useUserStore = defineStore("user", () => {
     }
 
     return {
-        userData, loadUser, idUser,
+        userData, loadUser, idUser, uploadFile,
         question, pointsLabel, oppositeGender, askQuestion
     }
 });

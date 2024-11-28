@@ -31,6 +31,16 @@
         websocketStore.connect(idUser);
     });
 
+    const uploadFile = (file) => {
+        console.log(file);
+        const fileDto = {
+            multipartFile: file.raw,
+            idUser,
+            filename: file.name
+        };
+        userStore.uploadFile(fileDto);
+    }
+
     onBeforeUnmount(() => {
         // websocketStore.closeConnection();
     });
@@ -59,10 +69,35 @@
                         {{askQuestionButton}}</el-button>
                 </div>
             </div>
+            <el-card class="photos">
+                <div slot="header" class="clearfix">
+                    <span>Фотографии</span>
+                </div>
+                <div class="photo_block">
+
+                </div>
+            </el-card>
+            <el-upload
+                class="upload-demo"
+                :on-change="uploadFile"
+                :auto-upload="false">
+                <el-button size="small" type="primary">Нажмите, чтобы загрузить фото</el-button>
+                <div slot="tip" class="el-upload__tip">jpg/png файлы размером не более 5 Мб</div>
+            </el-upload>
         </el-main>
     </el-card>
 </template>
 
 <style scoped>
-
+    .photos {
+        height: 400px;
+    }
+    .photo_block {
+        display: grid;
+        grid-template: 50px / 50px;
+        grid-auto-columns: 50px;
+        grid-auto-rows: 50px;
+        gap: 30px;
+        overflow-y: scroll;
+    }
 </style>

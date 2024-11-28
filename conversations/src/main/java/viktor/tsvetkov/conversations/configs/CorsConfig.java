@@ -27,6 +27,7 @@ public class CorsConfig {
                         .requestMatchers("/messages-socket/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/chatItem/**").permitAll()
+                        .requestMatchers("/file/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
