@@ -22,9 +22,14 @@
     const logOutBtn = "Выйти";
 
     let fileList = computed(() => userStore.fileList);
+    let showSlider = false;
 
     const logOut = () => {
         authenticationStore.logOut();
+    }
+
+    const sliderToggle = () => {
+        showSlider = !showSlider;
     }
 
     onMounted(() => {
@@ -73,9 +78,16 @@
                 </div>
                 <div class="photo_block">
                     <div v-for="file in fileList" :key="file.id">
-                        <img :src="file.filepath" alt="image">
+                        <img style="width: 100%; height: 100%; object-fit: cover"
+                             @click="sliderToggle"
+                             :src="file.filepath" alt="image">
                     </div>
                 </div>
+<!--                <el-carousel :autoplay="false" class="carousel" indicator-position="outside">-->
+<!--                    <el-carousel-item style="height: 100%" v-for="file in fileList" :key="file.id">-->
+<!--                        <img style="width: 100%; height: 100%; object-fit: cover" :src="file.filepath" alt="image">-->
+<!--                    </el-carousel-item>-->
+<!--                </el-carousel>-->
             </el-card>
             <el-upload
                 class="upload-demo"
@@ -90,14 +102,39 @@
 
 <style scoped>
     .photos {
-        height: 400px;
+        height: 600px;
     }
     .photo_block {
         display: grid;
-        grid-template: 50px / 50px;
-        grid-auto-columns: 50px;
-        grid-auto-rows: 50px;
-        gap: 30px;
+        height: 570px;
+        grid-template: 240px / repeat(3, 240px);
+        grid-auto-rows: 240px;
+        gap: 20px;
         overflow-y: scroll;
+    }
+
+    .el-carousel__item h3 {
+        color: #475669;
+        font-size: 18px;
+        opacity: 0.75;
+        line-height: 300px;
+        margin: 0;
+    }
+
+    .carousel {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 800px;
+        height: 600px;
+    }
+
+    .el-carousel__item:nth-child(2n) {
+        background-color: #99a9bf;
+    }
+
+    .el-carousel__item:nth-child(2n+1) {
+        background-color: #d3dce6;
     }
 </style>

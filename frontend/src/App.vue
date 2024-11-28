@@ -38,7 +38,7 @@
 
     .container {
         display: grid;
-        grid-template: minmax(600px, 800px) / 200px 850px;
+        grid-template: minmax(600px, 900px) / 200px 1100px;
         column-gap: 20px;
     }
 </style>
