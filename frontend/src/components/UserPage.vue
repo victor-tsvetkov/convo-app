@@ -1,7 +1,7 @@
 <script setup>
     import {useUserStore} from "@/stores/user.js";
     import {storeToRefs} from "pinia";
-    import {computed, onMounted} from "vue";
+    import {computed, onMounted, ref} from "vue";
     import {useWebSocketStore} from "@/stores/websocket.js";
     import {useAuthenticationStore} from "@/stores/authentication.js";
     import {useMessagesStore} from "@/stores/messages.js";
@@ -22,14 +22,16 @@
     const logOutBtn = "Выйти";
 
     let fileList = computed(() => userStore.fileList);
-    let showSlider = false;
+    let showSlider = ref(false);
+    const carousel = ref(null);
 
     const logOut = () => {
         authenticationStore.logOut();
     }
 
-    const sliderToggle = () => {
-        showSlider = !showSlider;
+    const sliderToggle = (index) => {
+        carousel.value.setActiveItem(index);
+        showSlider.value = !showSlider.value;
     }
 
     onMounted(() => {
@@ -77,17 +79,21 @@
                     <span>Фотографии</span>
                 </div>
                 <div class="photo_block">
-                    <div v-for="file in fileList" :key="file.id">
+                    <div v-for="(file, index) in fileList"
+                         @click="sliderToggle(index)"
+                         :key="file.id">
                         <img style="width: 100%; height: 100%; object-fit: cover"
-                             @click="sliderToggle"
                              :src="file.filepath" alt="image">
                     </div>
                 </div>
-<!--                <el-carousel :autoplay="false" class="carousel" indicator-position="outside">-->
-<!--                    <el-carousel-item style="height: 100%" v-for="file in fileList" :key="file.id">-->
-<!--                        <img style="width: 100%; height: 100%; object-fit: cover" :src="file.filepath" alt="image">-->
-<!--                    </el-carousel-item>-->
-<!--                </el-carousel>-->
+                <el-carousel ref="carousel" v-show="showSlider" height="885px"
+                             trigger="click"
+                             :autoplay="false" class="carousel"
+                             indicator-position="none">
+                    <el-carousel-item class="carousel_item" v-for="file in fileList" :key="file.id">
+                        <img class="carousel_image" :src="file.filepath" alt="image">
+                    </el-carousel-item>
+                </el-carousel>
             </el-card>
             <el-upload
                 class="upload-demo"
@@ -97,10 +103,23 @@
                 <div slot="tip" class="el-upload__tip">jpg/png файлы размером не более 5 Мб</div>
             </el-upload>
         </el-main>
+        <div v-if="showSlider" @click="showSlider = !showSlider" class="grayLayout"></div>
     </el-card>
 </template>
 
 <style scoped>
+
+    .grayLayout {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        background-color: black;
+        opacity: 0.5;
+        z-index: 5;
+    }
+
     .photos {
         height: 600px;
     }
@@ -126,8 +145,19 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 800px;
-        height: 600px;
+        width: 960px;
+        z-index: 10;
+    }
+
+    .el-carousel__item[data-v-c078ba28]:nth-child(2n+1),
+    .el-carousel__item[data-v-c078ba28]:nth-child(2n){
+        background-color: #222222;
+    }
+
+    .carousel_image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
     }
 
     .el-carousel__item:nth-child(2n) {
