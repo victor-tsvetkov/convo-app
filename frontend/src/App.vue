@@ -1,44 +1,52 @@
 <script setup>
 
     import {useUserStore} from "@/stores/user.js";
-    import {computed} from "vue";
+    import {computed, ref} from "vue";
     import {useMessagesStore} from "@/stores/messages.js";
+    import {useRouter} from "vue-router";
 
     const userStore = useUserStore();
     const messagesStore = useMessagesStore();
     const idUser = computed(() => userStore.idUser);
 
-    const chatPath = `/chats/`;
+    let activeTab = ref("userPage");
+
+    const router = useRouter();
+
+    const routeTo = () => {
+        let path;
+        if (activeTab.value === 'userPage') {
+            path = "/user";
+        } else if (activeTab.value === 'chats') {
+            path = "/chats/";
+        } else {
+            path = "/photos";
+        }
+        router.push({path});
+    }
 
 </script>
 
 <template>
     <div class="container">
-        <el-menu v-if="!!idUser"
-                 class="el-menu-vertical-demo">
-            <el-menu-item>
-                <router-link class="el-menu-item" to="/user">
-                    Моя страница
-                </router-link>
-            </el-menu-item>
-            <el-menu-item>
-                <router-link class="el-menu-item" :to="chatPath">
-                    Мои чаты <span> <el-badge type="primary" :value="messagesStore.unreadMessagesQuantity"/></span>
-                </router-link>
-            </el-menu-item>
-        </el-menu>
+        <el-tabs v-model="activeTab" @tab-change="routeTo" v-if="!!idUser" type="border-card">
+            <el-tab-pane name="userPage" label="Моя страница"></el-tab-pane>
+            <el-tab-pane name="chats" label="Чаты">
+                <el-badge type="primary" :value="messagesStore.unreadMessagesQuantity"/>
+            </el-tab-pane>
+            <el-tab-pane name="photos" label="Фотографии"></el-tab-pane>
+        </el-tabs>
         <router-view></router-view>
     </div>
 </template>
 
 <style>
-    .el-menu-item * {
-        vertical-align: unset;
-    }
-
     .container {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
         display: grid;
-        grid-template: minmax(600px, 900px) / 200px 1100px;
+        grid-template: 39px minmax(600px, 900px) / 900px;
         column-gap: 20px;
     }
 </style>

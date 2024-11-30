@@ -59,7 +59,7 @@
 
 <style>
     .chats {
-        width: 700px;
+        width: 100%;
     }
     .chat_board {
         display: grid;

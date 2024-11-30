@@ -95,7 +95,7 @@ import {useWebSocketStore} from "@/stores/websocket.js";
 <style scoped>
     .chat {
         display: grid;
-        grid-template: 600px 100px 50px / 760px;
+        grid-template: 600px 100px 50px / 100%;
     }
 
     .message {
