@@ -19,6 +19,7 @@ import {toRefs} from 'vue';
         <el-form-item v-for="item in data.data" :key="item.id" :label="item.label">
             <el-input v-if="item.type === 'text'" :type="item.type" v-model="item.value"></el-input>
             <el-input v-if="item.type === 'password'" :type="item.type" v-model="item.value"></el-input>
+            <el-input v-if="item.type === 'number'" :type="item.type" :min="18" v-model="item.value"></el-input>
             <el-select v-if="item.type === 'select'" v-model="item.value"
                        clearable
                        :placeholder="item.placeholder">

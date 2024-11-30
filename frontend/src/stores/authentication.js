@@ -12,11 +12,13 @@ export const useAuthenticationStore = defineStore("authentication", () => {
 
     const signUp = () => {
         const name = registerFormData[0].value;
-        const username = registerFormData[2].value;
-        const password = registerFormData[3].value;
+        const username = registerFormData[3].value;
+        const password = registerFormData[4].value;
         const sex = registerFormData[1].value;
-        if (!!name && !!username && !!password && !!sex) {
-            const registerRequest = {name, username, password, sex};
+        const age = registerFormData[2].value;
+        if (!!name && !!username && !!password && !!sex && !!age) {
+            const registerRequest = {name, username, password, sex, age};
+            console.log(registerRequest)
             axios.post('auth/register', registerRequest)
             .then(result => {
                 if (result.status === 200) {
@@ -78,12 +80,19 @@ export const useAuthenticationStore = defineStore("authentication", () => {
         },
         {
             id: 3,
+            label: 'Возраст',
+            value: null,
+            type: 'number',
+            placeholder: 'Введите ваш возраст'
+        },
+        {
+            id: 4,
             label: 'Имя пользователя',
             value: '',
             type: 'text'
         },
         {
-            id: 4,
+            id: 5,
             label: 'Пароль',
             value: '',
             type: 'password'

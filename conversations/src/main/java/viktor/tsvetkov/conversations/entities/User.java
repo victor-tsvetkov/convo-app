@@ -53,6 +53,9 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
+    @Column(name = "age")
+    private Integer age;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

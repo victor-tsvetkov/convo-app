@@ -40,6 +40,7 @@ public class UserService {
                 .creationDate(LocalDateTime.now())
                 .username(userDto.username())
                 .password(userDto.password())
+                .age(userDto.age())
                 .build();
         return userRepository.save(user);
     }

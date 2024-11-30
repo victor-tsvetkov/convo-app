@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public record UserDto(
         @Nullable UUID id, String name,
-        Sex sex, String username, String password) {
+        Sex sex, String username, String password, int age) {
 }

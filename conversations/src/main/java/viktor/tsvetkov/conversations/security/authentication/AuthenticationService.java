@@ -26,7 +26,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
         UserDto userDto = new UserDto(null, request.name(), request.sex(),
-                request.username(), passwordEncoder.encode(request.password()));
+                request.username(), passwordEncoder.encode(request.password()), request.age());
         User user = userService.save(userDto);
         String jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder().token(jwtToken).user(user).build();
