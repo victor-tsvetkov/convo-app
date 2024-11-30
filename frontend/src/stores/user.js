@@ -24,7 +24,6 @@ export const useUserStore = defineStore("user", () => {
                     sex: result.data.sex,
                     points: result.data.points
                 };
-                loadFiles();
             }).catch(e => console.error(e));
         }
     }

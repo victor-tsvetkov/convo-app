@@ -9,15 +9,16 @@
     const messagesStore = useMessagesStore();
     const idUser = computed(() => userStore.idUser);
 
-    let activeTab = ref("userPage");
-
+    let currentTab = ref(
+        localStorage.getItem("currentTab") !== null ? localStorage.getItem("currentTab") : "userPage"
+    );
     const router = useRouter();
-
     const routeTo = () => {
+        localStorage.setItem("currentTab", currentTab.value);
         let path;
-        if (activeTab.value === 'userPage') {
+        if (currentTab.value === 'userPage') {
             path = "/user";
-        } else if (activeTab.value === 'chats') {
+        } else if (currentTab.value === 'chats') {
             path = "/chats/";
         } else {
             path = "/photos";
@@ -29,7 +30,7 @@
 
 <template>
     <div class="container">
-        <el-tabs v-model="activeTab" @tab-change="routeTo" v-if="!!idUser" type="border-card">
+        <el-tabs v-model="currentTab" @tab-change="routeTo" v-if="!!idUser" type="border-card">
             <el-tab-pane name="userPage" label="Моя страница"></el-tab-pane>
             <el-tab-pane name="chats" label="Чаты">
                 <el-badge type="primary" :value="messagesStore.unreadMessagesQuantity"/>
