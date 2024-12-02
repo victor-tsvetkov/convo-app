@@ -4,6 +4,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import viktor.tsvetkov.conversations.dto.AgeRange;
 import viktor.tsvetkov.conversations.dto.ChatDto;
 import viktor.tsvetkov.conversations.dto.MessageDto;
 import viktor.tsvetkov.conversations.dto.QuestionDto;
@@ -36,7 +37,8 @@ public class QuestionService {
             }
             points = 30;
         }
-        User randomUser = userService.getRandomUserToChat(currentUser.getId(), askedSex);
+        User randomUser = userService.getRandomUserToChat(currentUser.getId(),
+                new AgeRange(questionDto.min(), questionDto.max()), askedSex);
         ChatDto chatDto = new ChatDto(null);
         Chat chat = chatService.save(chatDto);
         messageService.save(new MessageDto(null, chat.getId(), currentUser.getId(), questionDto.question()));

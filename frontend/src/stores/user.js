@@ -14,6 +14,7 @@ export const useUserStore = defineStore("user", () => {
     let idUser = computed(() => authStore.idUser);
     let fileList = ref([]);
     let showSlider = ref(false);
+    let ageRangeValues = ref([18, 40]);
 
     const setShowSlider = (value) => {
         showSlider.value = value;
@@ -65,7 +66,9 @@ export const useUserStore = defineStore("user", () => {
             const questionDto = {
                 idUser,
                 question: question.value,
-                oppositeGender: oppositeGender.value
+                oppositeGender: oppositeGender.value,
+                min: ageRangeValues.value[0],
+                max: ageRangeValues.value[1]
             };
             axios.post("question", questionDto)
             .then(result => {
@@ -84,7 +87,7 @@ export const useUserStore = defineStore("user", () => {
     }
 
     return {
-        userData, loadUser, idUser, uploadFile, fileList, showSlider, setShowSlider,
+        userData, loadUser, idUser, uploadFile, fileList, showSlider, setShowSlider, ageRangeValues,
         question, pointsLabel, oppositeGender, askQuestion, loadFiles
     }
 });

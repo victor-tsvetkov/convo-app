@@ -8,7 +8,7 @@
 
     const userStore = useUserStore();
     const websocketStore = useWebSocketStore();
-    const {userData, question, pointsLabel, oppositeGender} = storeToRefs(userStore);
+    const {userData, question, pointsLabel, oppositeGender, ageRangeValues} = storeToRefs(userStore);
     const {askQuestion, idUser} = userStore;
 
     const authenticationStore = useAuthenticationStore();
@@ -45,6 +45,13 @@
         <el-main>
             <div>
                 <span>{{askQuestionLabel}}</span>
+                <el-slider
+                    style="width: 270px"
+                    v-model="ageRangeValues"
+                    range
+                    :min="18"
+                    :max="100">
+                </el-slider>
                 <div>
                     <el-input clearable v-model="question" :placeholder="askQuestionPlaceholder"></el-input>
                     <el-tooltip :content="toolTipText" placement="bottom-start">

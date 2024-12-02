@@ -5,6 +5,7 @@ import java.util.UUID;
 public record QuestionDto(
         UUID idUser,
         String question,
-        boolean oppositeGender
+        boolean oppositeGender,
+        int min, int max
 ) {
 }

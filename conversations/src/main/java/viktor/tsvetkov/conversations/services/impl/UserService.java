@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import viktor.tsvetkov.conversations.dto.AgeRange;
 import viktor.tsvetkov.conversations.dto.UserDto;
 import viktor.tsvetkov.conversations.entities.User;
 import viktor.tsvetkov.conversations.enums.Sex;
@@ -64,9 +65,11 @@ public class UserService {
         return users.get(getRandomInt(0, users.size() - 1));
     }
 
-    public List<User> usersCurrentUserDoesNotHaveChatWith(UUID currentUserId, @Nullable Sex sex) {
+    public List<User> usersCurrentUserDoesNotHaveChatWith(UUID currentUserId, AgeRange ageRange, @Nullable Sex sex) {
         Map<String, Object> params = new HashMap<>(2);
         params.put("currentUserId", currentUserId);
+        params.put("min", ageRange.min());
+        params.put("max", ageRange.max());
         String sql;
         if (sex != null) {
             params.put("sex", sex.toString());
@@ -77,8 +80,8 @@ public class UserService {
         return queryService.executeSql(sql, User.class, params);
     }
 
-    public User getRandomUserToChat(UUID currentUserId, @Nullable Sex sex) {
-        List<User> users = usersCurrentUserDoesNotHaveChatWith(currentUserId, sex);
+    public User getRandomUserToChat(UUID currentUserId, AgeRange ageRange, @Nullable Sex sex) {
+        List<User> users = usersCurrentUserDoesNotHaveChatWith(currentUserId, ageRange, sex);
         if (users.isEmpty()) {
             throw new NoUsersToTalkException("Упс! Похоже, вы общались уже со всеми пользователями =)");
         }

@@ -7,7 +7,9 @@ public class SqlQueries {
                 select users.id from users join chat_items ci
                                 on users.id = ci.user_id
                                 join chats c on ci.chat_id = c.id
-            ) and u.id != :currentUserId""";
+            ) and u.id != :currentUserId 
+            and u.age between :min and :max
+            """;
 
     public static final String BY_SEX = " and u.sex = :sex";
 
