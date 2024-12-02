@@ -11,6 +11,24 @@
 
     const showSlider = computed(() => userStore.showSlider);
 
+    const tabs = [
+        {
+            id: 1,
+            name: "userPage",
+            label: "Моя страница"
+        },
+        {
+            id: 2,
+            name: "chats",
+            label: "Чаты"
+        },
+        {
+            id: 3,
+            name: "photos",
+            label: "Фотографии"
+        }
+    ];
+
     let currentTab = ref(
         localStorage.getItem("currentTab") !== null ? localStorage.getItem("currentTab") : "userPage"
     );
@@ -34,19 +52,19 @@
     <div>
         <div class="container">
             <el-tabs v-model="currentTab" @tab-change="routeTo" v-if="!!idUser" type="border-card">
-                <el-tab-pane name="userPage" label="Моя страница"></el-tab-pane>
-                <el-tab-pane name="chats">
-                    <template #label>
-                        Чаты
+                <el-tab-pane :key="tab.id"
+                             v-for="tab in tabs"
+                             :name="tab.name"
+                             :label="tab.label">
+                    <template v-if="tab.name === 'chats'" #label>
+                        {{tab.label}}
                         <el-badge v-if="messagesStore.unreadMessagesQuantity > 0" type="danger"
                                   :value="messagesStore.unreadMessagesQuantity"></el-badge>
                     </template>
                 </el-tab-pane>
-                <el-tab-pane name="photos" label="Фотографии"></el-tab-pane>
             </el-tabs>
-            <router-view></router-view>
+            <router-view class="router_view"></router-view>
         </div>
-
         <div v-if="showSlider" @click="userStore.setShowSlider(false)" class="grayLayout"></div>
     </div>
 </template>
@@ -58,8 +76,26 @@
         width: 900px;
     }
 
+    .router_view {
+        height: 847px;
+    }
+
     .el-tabs--border-card>.el-tabs__content {
         padding: 0;
+    }
+
+    button.el-carousel__arrow.el-carousel__arrow--right {
+        right: 0;
+        width: 100px;
+        height: 100%;
+        border-radius: 0;
+    }
+
+    button.el-carousel__arrow.el-carousel__arrow--left {
+        left: 0;
+        width: 100px;
+        height: 100%;
+        border-radius: 0;
     }
 
     .grayLayout {

@@ -60,6 +60,10 @@
 </template>
 
 <style scoped>
-
+    .user_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
 </style>

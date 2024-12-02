@@ -92,7 +92,7 @@
 
     .el-carousel__item[data-v-405f568d]:nth-child(2n+1),
     .el-carousel__item[data-v-405f568d]:nth-child(2n){
-        background-color: #222222;
+        background-color: inherit;
     }
 
     .carousel_image {
