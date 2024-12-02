@@ -4,17 +4,16 @@
 
     const userStore = useUserStore();
     let fileList = computed(() => userStore.fileList);
-    let showSlider = ref(false);
+    let showSlider = computed(() => userStore.showSlider);
     const carousel = ref(null);
     const {idUser} = userStore;
 
     const sliderToggle = (index) => {
         carousel.value.setActiveItem(index);
-        showSlider.value = !showSlider.value;
+        userStore.setShowSlider(!showSlider.value);
     }
 
     const uploadFile = (file) => {
-        console.log(file);
         const fileDto = {
             multipartFile: file.raw,
             idUser,
@@ -28,24 +27,26 @@
 </script>
 
 <template>
-    <el-card class="photos">
-        <div slot="header" class="photos_header">
-            <span>Фотографии</span>
-            <el-upload
-                class="upload-demo"
-                :on-change="uploadFile"
-                :auto-upload="false">
-                <el-button size="small" type="primary">Нажмите, чтобы загрузить фото</el-button> <br>
-            </el-upload>
-        </div>
-        <div class="photo_block">
-            <div v-for="(file, index) in fileList"
-                 @click="sliderToggle(index)"
-                 :key="file.id">
-                <img style="width: 100%; height: 100%; object-fit: cover"
-                     :src="file.filepath" alt="image">
+    <div>
+        <el-card class="photos">
+            <div slot="header" class="photos_header">
+                <el-upload
+                    class="upload-demo"
+                    :on-change="uploadFile"
+                    :auto-upload="false">
+                    <el-button size="small" type="primary">Нажмите, чтобы загрузить фото</el-button> <br>
+                </el-upload>
             </div>
-        </div>
+            <div class="photo_block">
+                <div v-for="(file, index) in fileList"
+                     style="cursor: pointer"
+                     @click="sliderToggle(index)"
+                     :key="file.id">
+                    <img style="width: 100%; height: 100%; object-fit: cover"
+                         :src="file.filepath" alt="image">
+                </div>
+            </div>
+        </el-card>
         <el-carousel ref="carousel" v-show="showSlider" height="885px"
                      trigger="click"
                      :autoplay="false" class="carousel"
@@ -54,35 +55,21 @@
                 <img class="carousel_image" :src="file.filepath" alt="image">
             </el-carousel-item>
         </el-carousel>
-        <div v-if="showSlider" @click="showSlider = !showSlider" class="grayLayout"></div>
-    </el-card>
+    </div>
 </template>
 
 <style scoped>
-    .grayLayout {
-        position: fixed;
-        left: 0;
-        top: 0;
-        height: 100%;
-        width: 100%;
-        background-color: black;
-        opacity: 0.5;
-        z-index: 5;
-    }
     .photos {
         height: 100%;
+        border-top: none;
     }
-    .photos_header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+
     .photo_block {
         display: grid;
-        height: 100%;
-        grid-template: 240px / repeat(3, 240px);
-        grid-auto-rows: 240px;
-        gap: 20px;
+        height: 795px;
+        grid-template: 200px / repeat(4, 200px);
+        grid-auto-rows: 200px;
+        gap: 10px;
         overflow-y: scroll;
     }
 
@@ -100,11 +87,11 @@
         left: 50%;
         transform: translate(-50%, -50%);
         width: 960px;
-        z-index: 10;
+        z-index: 20;
     }
 
-    .el-carousel__item:nth-child(2n+1),
-    .el-carousel__item:nth-child(2n){
+    .el-carousel__item[data-v-405f568d]:nth-child(2n+1),
+    .el-carousel__item[data-v-405f568d]:nth-child(2n){
         background-color: #222222;
     }
 

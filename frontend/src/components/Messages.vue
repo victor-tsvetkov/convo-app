@@ -32,9 +32,6 @@
 <template>
     <el-card title="Чаты" class="chats">
         <div v-if="dataChats.length > 0">
-            <div slot="header" class="clearfix">
-                <span>Чаты</span>
-            </div>
             <div class="card-header">
                 <el-input @input="loadDataMessages(idUser, searchMessageValue)"
                           v-model="searchMessageValue" clearable

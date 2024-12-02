@@ -9,6 +9,8 @@
     const messagesStore = useMessagesStore();
     const idUser = computed(() => userStore.idUser);
 
+    const showSlider = computed(() => userStore.showSlider);
+
     let currentTab = ref(
         localStorage.getItem("currentTab") !== null ? localStorage.getItem("currentTab") : "userPage"
     );
@@ -29,25 +31,45 @@
 </script>
 
 <template>
-    <div class="container">
-        <el-tabs v-model="currentTab" @tab-change="routeTo" v-if="!!idUser" type="border-card">
-            <el-tab-pane name="userPage" label="Моя страница"></el-tab-pane>
-            <el-tab-pane name="chats" label="Чаты">
-                <el-badge type="primary" :value="messagesStore.unreadMessagesQuantity"/>
-            </el-tab-pane>
-            <el-tab-pane name="photos" label="Фотографии"></el-tab-pane>
-        </el-tabs>
-        <router-view></router-view>
+    <div>
+        <div class="container">
+            <el-tabs v-model="currentTab" @tab-change="routeTo" v-if="!!idUser" type="border-card">
+                <el-tab-pane name="userPage" label="Моя страница"></el-tab-pane>
+                <el-tab-pane name="chats">
+                    <template #label>
+                        Чаты
+                        <el-badge v-if="messagesStore.unreadMessagesQuantity > 0" type="danger"
+                                  :value="messagesStore.unreadMessagesQuantity"></el-badge>
+                    </template>
+                </el-tab-pane>
+                <el-tab-pane name="photos" label="Фотографии"></el-tab-pane>
+            </el-tabs>
+            <router-view></router-view>
+        </div>
+
+        <div v-if="showSlider" @click="userStore.setShowSlider(false)" class="grayLayout"></div>
     </div>
 </template>
 
 <style>
     .container {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        display: grid;
-        grid-template: 39px minmax(600px, 900px) / 900px;
-        column-gap: 20px;
+        display: block;
+        margin: 0 auto;
+        width: 900px;
+    }
+
+    .el-tabs--border-card>.el-tabs__content {
+        padding: 0;
+    }
+
+    .grayLayout {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        background-color: black;
+        opacity: 0.5;
+        z-index: 15;
     }
 </style>

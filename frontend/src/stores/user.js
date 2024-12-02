@@ -13,6 +13,11 @@ export const useUserStore = defineStore("user", () => {
     const pointsLabel = ref("Ваши баллы");
     let idUser = computed(() => authStore.idUser);
     let fileList = ref([]);
+    let showSlider = ref(false);
+
+    const setShowSlider = (value) => {
+        showSlider.value = value;
+    }
 
     const loadUser = () => {
         if (!!idUser.value) {
@@ -79,7 +84,7 @@ export const useUserStore = defineStore("user", () => {
     }
 
     return {
-        userData, loadUser, idUser, uploadFile, fileList,
+        userData, loadUser, idUser, uploadFile, fileList, showSlider, setShowSlider,
         question, pointsLabel, oppositeGender, askQuestion, loadFiles
     }
 });
