@@ -6,4 +6,6 @@ import viktor.tsvetkov.conversations.entities.ChatItem;
 import java.util.UUID;
 
 public interface ChatItemRepository extends JpaRepository<ChatItem, UUID> {
+
+    void removeChatItemByChatId(UUID chatId);
 }

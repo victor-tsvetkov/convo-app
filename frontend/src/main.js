@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import ElementPlus from "element-plus";
 import "element-plus/theme-chalk/index.css";
+import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 
 import VueObserveVisibility from 'vue3-observe-visibility';
 
@@ -19,5 +20,6 @@ app.use(createPinia());
 app.use(router);
 app.use(VueObserveVisibility);
 app.use(ElementPlus);
+app.use(ElementPlusIconsVue);
 
 app.mount('#app')

@@ -51,6 +51,10 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
+    public void removeMessagesByIdChat(UUID idChat) {
+        messageRepository.removeMessagesByIdChat(idChat);
+    }
+
     public Map<String, Object> findMessagesByIdChat(UUID idChat, int start, int pageSize) {
         List<MessagesForChatDto> messages = queryService.executeSql(MESSAGES_IN_CHAT,
                 MessagesForChatDto.class, Map.of("chatId", idChat), start, pageSize);

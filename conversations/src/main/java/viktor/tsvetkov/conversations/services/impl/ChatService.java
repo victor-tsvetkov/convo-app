@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import viktor.tsvetkov.conversations.dto.ChatDto;
 import viktor.tsvetkov.conversations.entities.Chat;
 import viktor.tsvetkov.conversations.repositories.ChatRepository;
+import viktor.tsvetkov.conversations.services.ChatItemService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.UUID;
 public class ChatService {
 
     private final ChatRepository chatRepository;
+    private final MessageService messageService;
+    private final ChatItemService chatItemService;
 
     public Chat save(ChatDto chatDto) {
         Chat chat = new Chat();
@@ -23,6 +26,12 @@ public class ChatService {
         }
         chatRepository.save(chat);
         return chat;
+    }
+
+    public void removeChatWithMessages(UUID idChat) {
+        messageService.removeMessagesByIdChat(idChat);
+        chatItemService.removeByIdChat(idChat);
+        chatRepository.deleteById(idChat);
     }
 
     public Chat findChatById(UUID id) {

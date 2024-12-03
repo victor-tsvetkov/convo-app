@@ -15,4 +15,6 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
     @Query(nativeQuery = true,
     value = "update messages set is_read = true where id in :idsOfMessages")
     void readMessages(@Param("idsOfMessages") List<UUID> idsOfMessages);
+
+    void removeMessagesByIdChat(UUID idChat);
 }

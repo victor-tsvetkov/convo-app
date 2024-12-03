@@ -24,6 +24,10 @@ public class ChatItemService {
         chatItemRepository.save(chatItem);
     }
 
+    public void removeByIdChat(UUID idChat) {
+        chatItemRepository.removeChatItemByChatId(idChat);
+    }
+
     public List<ChatWithInterlocutor> getChatsWithInterlocutor(UUID idUser, String searchParam) {
         String sql;
         Map<String, Object> params = new HashMap<>();

@@ -34,7 +34,7 @@ public class ChatController {
 
     @DeleteMapping
     public void remove(@RequestParam(value = "id") UUID id) {
-        chatService.remove(id);
+        chatService.removeChatWithMessages(id);
     }
 
     @GetMapping("chatsByIdUsers")

@@ -34,6 +34,15 @@ export const useMessagesStore = defineStore("messages", () => {
         }).catch(e => console.error(e));
     }
 
+    const removeChatWithMessages = (idChat) => {
+        axios.delete("chat", {
+            params: {
+                id: idChat
+            }
+        })
+        .then(() => loadDataMessages(idUser.value, ""));
+    }
+
     const loadMessagesByChat = (idChat, start, pageSize) => {
         return axios.get("message/findMessagesByChatId", {
             params: {
@@ -83,7 +92,7 @@ export const useMessagesStore = defineStore("messages", () => {
     }
 
     return {
-        dataChats, loadDataMessages, chatMessages, totalMessagesQuantity,
+        dataChats, loadDataMessages, chatMessages, totalMessagesQuantity, removeChatWithMessages,
         clearData, setData, saveMessages, sendMessage, unreadMessagesQuantity, noChatsText
     }
 });
