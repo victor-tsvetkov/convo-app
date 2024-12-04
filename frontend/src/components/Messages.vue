@@ -5,7 +5,7 @@
     import {useRouter} from "vue-router";
     import {useWebSocketStore} from "@/stores/websocket.js";
     import {useUserStore} from "@/stores/user.js";
-    import {Close} from "@element-plus/icons-vue";
+    import {More} from "@element-plus/icons-vue";
 
     const router = useRouter();
     const userStore = useUserStore();
@@ -48,9 +48,15 @@
                             </div>
                             <div class="message">{{item.messageText}}</div>
                         </div>
-                        <el-icon class="close_chat_icon" @click="removeChatWithMessages(item.chatId)">
-                            <Close/>
-                        </el-icon>
+                        <el-tooltip placement="right" effect="light">
+                            <template #content>
+                                <div class="tooltip_text">Удалить</div>
+                                <div class="tooltip_text">Блокировать</div>
+                            </template>
+                            <el-icon class="close_chat_icon">
+                                <More/>
+                            </el-icon>
+                        </el-tooltip>
                     </el-card>
                 </div>
             </div>
@@ -68,6 +74,18 @@
         top: 5px;
         right: 5px;
         z-index: 20;
+    }
+
+    .tooltip_text {
+        width: 100px;
+        height: 30px;
+        font-size: 18px;
+        cursor: pointer;
+        vertical-align: center;
+    }
+
+    .tooltip_text:hover {
+        background-color: #F5F7FA;
     }
     .chat_board {
         display: grid;
