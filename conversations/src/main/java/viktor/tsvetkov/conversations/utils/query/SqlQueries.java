@@ -30,10 +30,10 @@ public class SqlQueries {
                                    then to_char(m.creation_date, 'HH24:MI')
                                when m.creation_date\\:\\:date = 'yesterday'
                                    then 'вчера'
-                               when extract(days from current_date - m.creation_date) <= 7
+                               when extract(days from current_date - m.creation_date) < 6
                                    then to_char(m.creation_date, 'TMday')
-                               when extract(days from current_date - m.creation_date) > 7 and extract(years from age(m.creation_date)) < 1
-                                   then to_char(m.creation_date, 'dd.MM')
+                               when extract(days from current_date - m.creation_date) >= 6 and extract(years from age(m.creation_date)) < 1
+                                   then to_char(m.creation_date, 'FMdd TMmon')
                                when extract(years from age(m.creation_date)) >= 1
                                    then to_char(m.creation_date, 'dd.MM.yyyy')
                             end as messageDate,

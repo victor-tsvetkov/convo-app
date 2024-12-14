@@ -58,11 +58,11 @@ public class MessageService {
     public Map<String, Object> findMessagesByIdChat(UUID idChat, int start, int pageSize) {
         List<MessagesForChatDto> messages = queryService.executeSql(MESSAGES_IN_CHAT,
                 MessagesForChatDto.class, Map.of("chatId", idChat), start, pageSize);
-        for (MessagesForChatDto message : messages) {
+        transformDate(messages, message -> {
             if (message.getFormattedDay() != null) {
                 message.setFormattedDay(transformDate(message.getFormattedDay()));
             }
-        }
+        });
         long totalQuantity = queryService.executeCountSql(MESSAGES_QUANTITY_IN_CHAT, Map.of("chatId", idChat));
         Map<String, Object> result = new HashMap<>();
         result.put("messages", messages);

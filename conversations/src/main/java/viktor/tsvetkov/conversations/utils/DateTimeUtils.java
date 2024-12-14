@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
+import java.util.function.Consumer;
 
 import static viktor.tsvetkov.conversations.enums.Dates.Months.JANUARY;
 import static viktor.tsvetkov.conversations.enums.Dates.Months.FEBRUARY;
@@ -34,6 +36,10 @@ public class DateTimeUtils {
         return Instant.ofEpochMilli(dateToConvert.getTime())
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
+    }
+
+    public static <T> void transformDate(List<T> items, Consumer<T> consumer) {
+        items.forEach(consumer);
     }
 
     /**
