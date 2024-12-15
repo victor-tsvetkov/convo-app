@@ -5,10 +5,13 @@
     import {useWebSocketStore} from "@/stores/websocket.js";
     import {useAuthenticationStore} from "@/stores/authentication.js";
     import {useMessagesStore} from "@/stores/messages.js";
+    import {Edit} from "@element-plus/icons-vue";
 
     const userStore = useUserStore();
     const websocketStore = useWebSocketStore();
-    const {userData, question, pointsLabel, oppositeGender, ageRangeValues} = storeToRefs(userStore);
+    const {userData, question, pointsLabel,
+        oppositeGender, ageRangeValues, showDescrInput,
+        description} = storeToRefs(userStore);
     const {askQuestion, idUser} = userStore;
 
     const authenticationStore = useAuthenticationStore();
@@ -44,6 +47,14 @@
         </el-header>
         <el-main>
             <div>
+                <div>
+                    <el-icon @click="showDescrInput = !showDescrInput">
+                        <Edit/>
+                    </el-icon>
+                    <span>Рассказ о себе: </span>
+                    <div v-if="!showDescrInput">{{userData.description}}</div>
+                    <el-input v-else type="textarea" v-model="description" :rows="3"></el-input>
+                </div>
                 <span>{{askQuestionLabel}}</span>
                 <el-slider
                     style="width: 270px"

@@ -42,6 +42,7 @@ public class UserService {
                 .username(userDto.username())
                 .password(userDto.password())
                 .age(userDto.age())
+                .description(userDto.description())
                 .build();
         return userRepository.save(user);
     }

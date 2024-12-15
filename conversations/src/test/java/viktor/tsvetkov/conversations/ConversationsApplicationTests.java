@@ -54,7 +54,8 @@ class ConversationsApplicationTests {
 
 	@Test
 	public void testSaveDto() {
-		UserDto userDto = new UserDto(null, "Petr", Sex.MALE, "petr222", "12345", 30);
+		UserDto userDto = new UserDto(null, "Petr",
+				Sex.MALE, "petr222", "12345", 30, "test descr");
 		userService.save(userDto);
 		String sql = "select * from users where name = 'Petr'";
 		List<User> users = jdbcTemplate.query(sql, new UserTestMapper());
@@ -74,7 +75,7 @@ class ConversationsApplicationTests {
 		String password = "55555";
 		Sex sex = Sex.MALE;
 		int age = 30;
-		RegisterRequest request = new RegisterRequest(name, username, password, sex, age);
+		RegisterRequest request = new RegisterRequest(name, username, password, sex, age, "test descr");
 		authenticationService.register(request);
 		String sql = "select * from users where name = '" + name + "';";
 		List<User> users = jdbcTemplate.query(sql, new UserTestMapper());

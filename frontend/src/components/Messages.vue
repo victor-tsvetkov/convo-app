@@ -13,7 +13,7 @@
     let idUser = computed(() => userStore.idUser);
     const store = useMessagesStore();
     const websocketStore = useWebSocketStore();
-    const {dataChats} = storeToRefs(store);
+    const {dataChats, showEmpty} = storeToRefs(store);
     const {loadDataMessages, noChatsText, removeChatWithMessages} = store;
 
     let searchMessageValue = ref('');
@@ -61,7 +61,7 @@
                 </div>
             </div>
         </div>
-        <el-empty v-else :description="noChatsText"></el-empty>
+        <el-empty v-if="showEmpty" :description="noChatsText"></el-empty>
     </el-card>
 </template>
 

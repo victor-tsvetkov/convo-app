@@ -18,7 +18,8 @@ export const useMessagesStore = defineStore("messages", () => {
     let currentPage = ref(0);
     const pageSize = 50;
     let start = currentPage.value * pageSize;
-    const noChatsText = "У вас пока нет чатов. Начните общение, задав вопрос случайному пользователю!"
+    const noChatsText = "У вас пока нет чатов. Начните общение, задав вопрос случайному пользователю!";
+    let showEmpty = ref(false);
 
     const socketStore = useWebSocketStore();
 
@@ -30,6 +31,9 @@ export const useMessagesStore = defineStore("messages", () => {
             }
         }).then(result => {
             dataChats.value = result.data;
+            if (dataChats.value.length === 0) {
+                showEmpty.value = true;
+            }
             console.log(result.data)
         }).catch(e => console.error(e));
     }
@@ -93,6 +97,6 @@ export const useMessagesStore = defineStore("messages", () => {
 
     return {
         dataChats, loadDataMessages, chatMessages, totalMessagesQuantity, removeChatWithMessages,
-        clearData, setData, saveMessages, sendMessage, unreadMessagesQuantity, noChatsText
+        clearData, setData, saveMessages, sendMessage, unreadMessagesQuantity, noChatsText, showEmpty
     }
 });

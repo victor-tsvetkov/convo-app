@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {loadUserData} from "@/api/loadUserData.js";
 import axios from "axios";
 import {ElMessage} from "element-plus";
@@ -15,6 +15,8 @@ export const useUserStore = defineStore("user", () => {
     let fileList = ref([]);
     let showSlider = ref(false);
     let ageRangeValues = ref([18, 40]);
+    let description = ref("");
+    let showDescrInput = ref(false);
 
     const setShowSlider = (value) => {
         showSlider.value = value;
@@ -28,10 +30,35 @@ export const useUserStore = defineStore("user", () => {
                     name: result.data.name,
                     id: result.data.id,
                     sex: result.data.sex,
-                    points: result.data.points
+                    points: result.data.points,
+                    description: result.data.description
                 };
             }).catch(e => console.error(e));
         }
+    }
+
+    watch(showDescrInput, () => {
+        if (!showDescrInput.value) {
+            console.log(description.value)
+            userData.value.description = description.value;
+            updateUser();
+        }
+    })
+
+    const updateUser = () => {
+        axios.put('user', userData.value)
+        .then(() => {
+            loadUserData(idUser.value)
+            .then(result => {
+                userData.value = {
+                    name: result.data.name,
+                    id: result.data.id,
+                    sex: result.data.sex,
+                    points: result.data.points,
+                    description: result.data.description
+                };
+            }).catch(e => console.error(e));
+        });
     }
 
     const uploadFile = (fileDto) => {
@@ -87,7 +114,9 @@ export const useUserStore = defineStore("user", () => {
     }
 
     return {
-        userData, loadUser, idUser, uploadFile, fileList, showSlider, setShowSlider, ageRangeValues,
-        question, pointsLabel, oppositeGender, askQuestion, loadFiles
+        userData, loadUser, idUser, uploadFile,
+        fileList, showSlider, setShowSlider, ageRangeValues,
+        question, pointsLabel, oppositeGender, askQuestion,
+        loadFiles, description, showDescrInput
     }
 });

@@ -12,23 +12,18 @@ export const useAuthenticationStore = defineStore("authentication", () => {
 
     const signUp = () => {
         const name = registerFormData[0].value;
-        const username = registerFormData[3].value;
-        const password = registerFormData[4].value;
+        const username = registerFormData[4].value;
+        const password = registerFormData[5].value;
         const sex = registerFormData[1].value;
         const age = registerFormData[2].value;
+        const description = registerFormData[3].value;
         if (!!name && !!username && !!password && !!sex && !!age) {
-            const registerRequest = {name, username, password, sex, age};
+            const registerRequest = {name, username, password, sex, age, description};
             console.log(registerRequest)
             axios.post('auth/register', registerRequest)
             .then(result => {
                 if (result.status === 200) {
-                    localStorage.setItem("idUser", result.data.user.id);
-                    localStorage.setItem("token", result.data.token);
-                    localStorage.setItem("userName", result.data.user.name);
-                    idUser.value = result.data.user.id;
-                    userName.value = result.data.user.name;
-                    token = result.data.token;
-                    router.push({path: '/user'});
+                    openUserPage(result.data.user.id, result.data.token, result.data.user.name);
                     console.log("User with id " + idUser.value + " successfully signed up");
                 }
             })
@@ -42,17 +37,21 @@ export const useAuthenticationStore = defineStore("authentication", () => {
             axios.post('auth/authenticate', {username, password})
             .then(result => {
                 if (result.status === 200) {
-                    localStorage.setItem("idUser", result.data.user.id);
-                    localStorage.setItem("token", result.data.token);
-                    localStorage.setItem("userName", result.data.user.name);
-                    idUser.value = result.data.user.id;
-                    userName.value = result.data.user.name;
-                    token = result.data.token;
-                    router.push({path: '/user'});
+                    openUserPage(result.data.user.id, result.data.token, result.data.user.name);
                     console.log("User with id " + idUser.value + " successfully logged in");
                 }
             })
         }
+    }
+
+    const openUserPage = (id, tokenValue, userNameValue) => {
+        localStorage.setItem("idUser", id);
+        localStorage.setItem("token", tokenValue);
+        localStorage.setItem("userName", userNameValue);
+        idUser.value = id;
+        userName.value = userNameValue;
+        token = tokenValue;
+        router.push({path: '/user'});
     }
 
     const logOut = () => {
@@ -87,12 +86,19 @@ export const useAuthenticationStore = defineStore("authentication", () => {
         },
         {
             id: 4,
+            label: 'Рассказ о себе',
+            value: '',
+            type: 'textarea',
+            placeholder: 'Напишите о себе что-нибудь...'
+        },
+        {
+            id: 5,
             label: 'Имя пользователя',
             value: '',
             type: 'text'
         },
         {
-            id: 5,
+            id: 6,
             label: 'Пароль',
             value: '',
             type: 'password'

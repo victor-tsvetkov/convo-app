@@ -56,6 +56,9 @@ public class User implements UserDetails {
     @Column(name = "age")
     private Integer age;
 
+    @Column(name = "description")
+    private String description;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

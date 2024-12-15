@@ -30,6 +30,12 @@ import {toRefs} from 'vue';
                     :value="option.value"
                 ></el-option>
             </el-select>
+            <el-input v-if="item.type === 'textarea'"
+                      :type="item.type"
+                      :placeholder="item.placeholder"
+                      v-model="item.value"
+                      :rows="3">
+            </el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="onSubmit">{{data.buttonName}}</el-button>
