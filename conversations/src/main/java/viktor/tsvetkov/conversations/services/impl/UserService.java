@@ -33,12 +33,9 @@ public class UserService {
     private final QueryService queryService;
 
     public List<User> getUsersForLiking(UUID currentUserId, String sex, AgeRange ageRange) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("currentUserId", currentUserId);
-        params.put("min", ageRange.min());
-        params.put("max", ageRange.max());
-        params.put("sex", sex);
-        return queryService.executeSql(SqlQueries.USERS_FOR_LIKING, User.class, params);
+        return queryService.executeSql(SqlQueries.USERS_FOR_LIKING, User.class, Map.of(
+                "currentUserId", currentUserId, "min", ageRange.min(), "max", ageRange.max(),
+                "sex", sex));
     }
 
     @Transactional

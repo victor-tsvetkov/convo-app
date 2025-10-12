@@ -6,6 +6,17 @@ export const useUsersLikingStore = defineStore("usersLiking", () => {
     let usersToLike = ref([]);
     let likedUsers = ref([]);
     let skippedUsers = ref([]);
+    let currentUserToLike = ref();
+
+    const skipUser = () => {
+        skippedUsers.value.push(currentUserToLike.value);
+        updateCurrentUserToLike();
+    }
+
+    const likeUser = () => {
+        likedUsers.value.push(currentUserToLike.value);
+        updateCurrentUserToLike();
+    }
 
     const loadUsersToLike = (currentUserId, sex, ageRange) => {
         console.log(ageRange);
@@ -21,7 +32,15 @@ export const useUsersLikingStore = defineStore("usersLiking", () => {
             }
         }).then(result => {
             console.log(result);
+            usersToLike.value = [...result.data];
+            updateCurrentUserToLike();
         }).catch(e => console.error(e));
+    }
+
+    const updateCurrentUserToLike = () => {
+        if (usersToLike.value.length > 0) {
+            currentUserToLike.value = usersToLike.value.shift();
+        }
     }
 
     return {
