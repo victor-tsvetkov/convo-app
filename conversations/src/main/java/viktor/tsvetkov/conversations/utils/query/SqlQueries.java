@@ -1,21 +1,25 @@
 package viktor.tsvetkov.conversations.utils.query;
 
 public class SqlQueries {
+    public static final String USERS_FOR_LIKING_CONDITION = """
+             and u.id not in (select li.id_user_1 from like_items li
+             where li.id_user_1 = :currentUserId or li.id_user_2 = :currentUserId)
+             and u.id not in (select li.id_user_2 from like_items li
+             where li.id_user_1 = :currentUserId or li.id_user_2 = :currentUserId)""";
+
     public static final String USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH = """
             select u.* from users u
             where u.id not in (
-                select users.id from users join chat_items ci
-                                on users.id = ci.user_id
-                                join chats c on ci.chat_id = c.id
-            ) and u.id != :currentUserId 
-            and u.age between :min and :max
+                select user_id from chat_items
+                    where user_id != :currentUserId
+                      and chat_id in (select chat_items.chat_id from chat_items
+                                      where user_id = :currentUserId
+                    )
+            ) and u.id != :currentUserId\s
+            and u.age between :min and :max and u.sex = :sex
             """;
 
-    public static final String BY_SEX = " and u.sex = :sex";
-
-    public static final
-    String USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH_BY_SEX = USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH + BY_SEX;
-
+    public static final String USERS_FOR_LIKING = USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH + USERS_FOR_LIKING_CONDITION;
 
     private static final String CHATS_WITH_INTERLOCUTOR = """
                 with c_w_i as (
@@ -96,4 +100,8 @@ public class SqlQueries {
 
     public static final String FILES_OF_USER = "select id, filepath from files where id_user = :idUser \n" +
             "order by creation_date desc";
+
+    public static final String LIKE_ITEMS_BY_ID_USERS = "select li.* from like_items li " +
+            "where (li.id_user_1 = :idUser1 or li.id_user_2 = :idUser1) " +
+            "and (li.id_user_1 = :idUser2 or li.id_user_2 = :idUser2)";
 }

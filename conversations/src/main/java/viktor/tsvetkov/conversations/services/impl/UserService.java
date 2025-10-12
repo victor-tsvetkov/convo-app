@@ -1,11 +1,10 @@
 package viktor.tsvetkov.conversations.services.impl;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import viktor.tsvetkov.conversations.dto.AgeRange;
 import viktor.tsvetkov.conversations.dto.UserDto;
 import viktor.tsvetkov.conversations.entities.User;
@@ -16,6 +15,7 @@ import viktor.tsvetkov.conversations.services.QueryService;
 import viktor.tsvetkov.conversations.utils.query.SqlQueries;
 
 import static viktor.tsvetkov.conversations.utils.RandomUtils.getRandomInt;
+import static viktor.tsvetkov.conversations.utils.query.SqlQueries.USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -32,18 +32,43 @@ public class UserService {
     private final UserRepository userRepository;
     private final QueryService queryService;
 
+    public List<User> getUsersForLiking(UUID currentUserId, String sex, AgeRange ageRange) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentUserId", currentUserId);
+        params.put("min", ageRange.min());
+        params.put("max", ageRange.max());
+        params.put("sex", sex);
+        return queryService.executeSql(SqlQueries.USERS_FOR_LIKING, User.class, params);
+    }
+
+    @Transactional
     public User save(UserDto userDto) {
-        User user = User.builder()
-                .id(userDto.id())
-                .points(50)
-                .name(userDto.name())
-                .sex(userDto.sex())
-                .creationDate(LocalDateTime.now())
-                .username(userDto.username())
-                .password(userDto.password())
-                .age(userDto.age())
-                .description(userDto.description())
-                .build();
+        User user;
+        if (userDto.id() != null) {
+            user = userRepository.findById(userDto.id()).orElseThrow();
+        } else {
+            user = new User();
+            user.setPoints(50);
+            user.setCreationDate(LocalDateTime.now());
+        }
+        if (userDto.name() != null) {
+            user.setName(user.getName());
+        }
+        if (userDto.sex() != null) {
+            user.setSex(userDto.sex());
+        }
+        if (userDto.description() != null && !userDto.description().isEmpty()) {
+            user.setDescription(userDto.description());
+        }
+        if (userDto.username() != null) {
+            user.setUsername(userDto.username());
+        }
+        if (userDto.password() != null) {
+            user.setPassword(userDto.password());
+        }
+        if (userDto.age() != null) {
+            user.setAge(userDto.age());
+        }
         return userRepository.save(user);
     }
 
@@ -51,7 +76,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    @Cacheable("users")
     public User findById(UUID id) {
         log.info("Getting user with id {}", id);
         return userRepository.findById(id).orElseThrow(() ->
@@ -62,31 +86,25 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User getRandomUser(List<User> users) {
-        return users.get(getRandomInt(0, users.size() - 1));
-    }
-
-    public List<User> usersCurrentUserDoesNotHaveChatWith(UUID currentUserId, AgeRange ageRange, @Nullable Sex sex) {
-        Map<String, Object> params = new HashMap<>(2);
-        params.put("currentUserId", currentUserId);
-        params.put("min", ageRange.min());
-        params.put("max", ageRange.max());
-        String sql;
-        if (sex != null) {
-            params.put("sex", sex.toString());
-            sql = SqlQueries.USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH_BY_SEX;
-        } else {
-            sql = SqlQueries.USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH;
-        }
-        return queryService.executeSql(sql, User.class, params);
-    }
-
-    public User getRandomUserToChat(UUID currentUserId, AgeRange ageRange, @Nullable Sex sex) {
+    public User getRandomUserToChat(UUID currentUserId, AgeRange ageRange, Sex sex) {
         List<User> users = usersCurrentUserDoesNotHaveChatWith(currentUserId, ageRange, sex);
         if (users.isEmpty()) {
             throw new NoUsersToTalkException("Упс! Похоже, вы общались уже со всеми пользователями =)");
         }
         return getRandomUser(users);
+    }
+
+    public List<User> usersCurrentUserDoesNotHaveChatWith(UUID currentUserId, AgeRange ageRange, Sex sex) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentUserId", currentUserId);
+        params.put("min", ageRange.min());
+        params.put("max", ageRange.max());
+        params.put("sex", sex);
+        return queryService.executeSql(USERS_CURRENT_USER_DOES_NOT_HAVE_CHAT_WITH, User.class, params);
+    }
+
+    public User getRandomUser(List<User> users) {
+        return users.get(getRandomInt(0, users.size() - 1));
     }
 
     public Optional<User> findUserByUsername(String username) {

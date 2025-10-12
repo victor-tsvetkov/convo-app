@@ -1,6 +1,7 @@
 package viktor.tsvetkov.conversations.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import viktor.tsvetkov.conversations.dto.FileDto;
@@ -12,11 +13,18 @@ import java.io.FileOutputStream;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FileIOService {
 
     private final FileEntityService fileEntityService;
 
     public void uploadFile(FileDto fileDto) {
+        if (writeFile(fileDto)) {
+            fileEntityService.save(fileDto);
+        }
+    }
+
+    private boolean writeFile(FileDto fileDto) {
         MultipartFile multipartFile = fileDto.multipartFile();
         if (!multipartFile.isEmpty()) {
             try {
@@ -25,10 +33,11 @@ public class FileIOService {
                 BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(FILE_PATH + filename));
                 stream.write(bytes);
                 stream.close();
-                fileEntityService.save(fileDto);
+                return true;
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                log.error("Произошла ошибка при записи файла {}. Текст ошибки: {}", fileDto.filename(), e.getMessage());
             }
         }
+        return false;
     }
 }

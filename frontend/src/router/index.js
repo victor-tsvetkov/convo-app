@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Messages from "@/components/Messages.vue";
+import Messages from "@/components/ChatList.vue";
 import WelcomePage from "@/pages/WelcomePage.vue";
 import UserPage from "@/components/UserPage.vue";
 import Chat from "@/components/Chat.vue";

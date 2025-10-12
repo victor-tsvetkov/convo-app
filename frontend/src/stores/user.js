@@ -4,19 +4,26 @@ import {loadUserData} from "@/api/loadUserData.js";
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import {useAuthenticationStore} from "@/stores/authentication.js";
+import {useUsersLikingStore} from "@/stores/usersliking.js";
 
 export const useUserStore = defineStore("user", () => {
 
     const authStore = useAuthenticationStore();
+    const usersLikingStore = useUsersLikingStore();
 
-    let userData = ref({});
+    let userData = ref({
+        name: null,
+        id: null,
+        sex: null,
+        points: null,
+        description: null
+    });
     const pointsLabel = ref("Ваши баллы");
     let idUser = computed(() => authStore.idUser);
     let fileList = ref([]);
     let showSlider = ref(false);
     let ageRangeValues = ref([18, 40]);
-    let description = ref("");
-    let showDescrInput = ref(false);
+    let showDescription = ref(false);
 
     const setShowSlider = (value) => {
         showSlider.value = value;
@@ -26,39 +33,26 @@ export const useUserStore = defineStore("user", () => {
         if (!!idUser.value) {
             loadUserData(idUser.value)
             .then(result => {
-                userData.value = {
-                    name: result.data.name,
-                    id: result.data.id,
-                    sex: result.data.sex,
-                    points: result.data.points,
-                    description: result.data.description
-                };
+                userData.value.name = result.data.name;
+                userData.value.id = result.data.id;
+                userData.value.sex = result.data.sex;
+                userData.value.points = result.data.points;
+                userData.value.description = result.data.description;
+                usersLikingStore.loadUsersToLike(idUser.value, 'FEMALE',
+                        {min: ageRangeValues.value[0], max: ageRangeValues.value[1]});
             }).catch(e => console.error(e));
         }
     }
 
-    watch(showDescrInput, () => {
-        if (!showDescrInput.value) {
-            console.log(description.value)
-            userData.value.description = description.value;
+    const handleShowDescription = () => {
+        showDescription.value = !showDescription.value;
+        if (!showDescription.value) {
             updateUser();
         }
-    })
+    }
 
     const updateUser = () => {
-        axios.put('user', userData.value)
-        .then(() => {
-            loadUserData(idUser.value)
-            .then(result => {
-                userData.value = {
-                    name: result.data.name,
-                    id: result.data.id,
-                    sex: result.data.sex,
-                    points: result.data.points,
-                    description: result.data.description
-                };
-            }).catch(e => console.error(e));
-        });
+        axios.put('user', userData.value);
     }
 
     const uploadFile = (fileDto) => {
@@ -86,14 +80,11 @@ export const useUserStore = defineStore("user", () => {
 
     const question = ref("");
 
-    const oppositeGender = ref(false);
-
     function askQuestion(idUser) {
         if (question.value.trim().length > 0) {
             const questionDto = {
                 idUser,
                 question: question.value,
-                oppositeGender: oppositeGender.value,
                 min: ageRangeValues.value[0],
                 max: ageRangeValues.value[1]
             };
@@ -101,9 +92,7 @@ export const useUserStore = defineStore("user", () => {
             .then(result => {
                 console.log(result);
                 question.value = "";
-                oppositeGender.value = false;
             }).catch(e => {
-                console.warn(e)
                 ElMessage({
                     showClose: true,
                     message: e.response.data.message,
@@ -116,7 +105,7 @@ export const useUserStore = defineStore("user", () => {
     return {
         userData, loadUser, idUser, uploadFile,
         fileList, showSlider, setShowSlider, ageRangeValues,
-        question, pointsLabel, oppositeGender, askQuestion,
-        loadFiles, description, showDescrInput
+        question, pointsLabel, askQuestion,
+        loadFiles, showDescription, handleShowDescription
     }
 });

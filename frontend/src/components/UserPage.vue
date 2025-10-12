@@ -6,16 +6,15 @@
     import {useAuthenticationStore} from "@/stores/authentication.js";
     import {useMessagesStore} from "@/stores/messages.js";
     import {Edit} from "@element-plus/icons-vue";
+    import {useUsersLikingStore} from "@/stores/usersliking.js";
 
     const userStore = useUserStore();
     const websocketStore = useWebSocketStore();
-    const {userData, question, pointsLabel,
-        oppositeGender, ageRangeValues, showDescrInput,
-        description} = storeToRefs(userStore);
+    const {userData, question, pointsLabel, ageRangeValues} = storeToRefs(userStore);
     const {askQuestion, idUser} = userStore;
 
     const authenticationStore = useAuthenticationStore();
-    const messageStore = useMessagesStore();
+    const usersLikingStore = useUsersLikingStore();
 
     const askQuestionLabel = "Задайте вопрос случайному человеку";
     const askQuestionPlaceholder = "Задайте вопрос";
@@ -30,7 +29,6 @@
 
     onMounted(() => {
         userStore.loadUser();
-        messageStore.loadDataMessages(idUser, "");
         websocketStore.connect(idUser);
     });
 
@@ -48,14 +46,13 @@
         <el-main>
             <div>
                 <div>
-                    <el-icon @click="showDescrInput = !showDescrInput">
+                    <el-icon style="cursor: pointer" @click="userStore.handleShowDescription()">
                         <Edit/>
                     </el-icon>
                     <span>Рассказ о себе: </span>
-                    <div v-if="!showDescrInput">{{userData.description}}</div>
-                    <el-input v-else type="textarea" v-model="description" :rows="3"></el-input>
+                    <span v-if="!userStore.showDescription">{{userData.description}}</span>
+                    <el-input :placeholder="'Напишите о себе что-нибудь'" v-else v-model="userData.description"></el-input>
                 </div>
-                <span>{{askQuestionLabel}}</span>
                 <el-slider
                     style="width: 270px"
                     v-model="ageRangeValues"
@@ -64,13 +61,7 @@
                     :max="100">
                 </el-slider>
                 <div>
-                    <el-input clearable v-model="question" :placeholder="askQuestionPlaceholder"></el-input>
-                    <el-tooltip :content="toolTipText" placement="bottom-start">
-                        <el-checkbox :label="oppositeGenderLabel" v-model="oppositeGender"></el-checkbox>
-                    </el-tooltip>
-                    <el-button style="float: right; margin-top: 10px"
-                               @click="askQuestion(idUser)">
-                        {{askQuestionButton}}</el-button>
+<!--                    компонент пролистывания анкет-->
                 </div>
             </div>
         </el-main>
