@@ -1,0 +1,6 @@
+.notification {
+    background-color: #3D3F42;
+    h2,p {
+        color: #ffffff;
+    }
+}
